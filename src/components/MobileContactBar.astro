@@ -1,0 +1,68 @@
+---
+// 모바일 하단 고정 상담바. 팝업이 아니다.
+// 상담 섹션이 보이는 동안에는 숨긴다: 폼 입력(가상 키보드)과 겹치지 않고, 제출 버튼 탭을 가로채지 않는다.
+import { PUBLIC_KAKAO_CHANNEL_URL as KAKAO_CHANNEL_URL } from 'astro:env/client';
+import { contact } from '../data/site';
+
+interface Props {
+  consultHref: string;
+}
+const { consultHref } = Astro.props;
+---
+
+<div class="contact-bar" data-contact-bar>
+  {KAKAO_CHANNEL_URL ? (
+    <a class="btn" href={KAKAO_CHANNEL_URL} target="_blank" rel="noopener">
+      카카오톡 상담<span class="sr-only">(새 창)</span>
+    </a>
+  ) : (
+    <a class="btn" href={consultHref}>상담 신청</a>
+  )}
+  <a class="call" href={contact.phoneHref}><span aria-hidden="true">☎</span> 전화 상담</a>
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-contact-bar]');
+  const consult = document.getElementById('consult');
+  if (bar && consult) {
+    new IntersectionObserver(([entry]) => bar.toggleAttribute('data-hidden', entry.isIntersecting)).observe(consult);
+  }
+</script>
+
+<style>
+  .contact-bar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom));
+    padding: 0 var(--gutter) env(safe-area-inset-bottom);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+  }
+  .contact-bar[data-hidden] {
+    display: none;
+  }
+  .btn {
+    flex: 1;
+    max-width: 240px;
+  }
+  .call {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--touch-min);
+    padding: 0 8px;
+    color: var(--color-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  @media (min-width: 769px) {
+    .contact-bar {
+      display: none;
+    }
+  }
+</style>

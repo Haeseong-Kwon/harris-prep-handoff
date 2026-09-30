@@ -1,0 +1,73 @@
+/*
+ * HARRIS PREP 디자인 토큰.
+ * 출처: docs/handoff/SPEC.md + docs/handoff/styles.css 최종 레이어.
+ * 기본색은 톡픽 #0C2340, 포인트는 #2463EB 하나만 사용한다.
+ */
+:root {
+  /* 색 */
+  --color-navy: #0c2340;
+  --color-accent: #2463eb;
+  --color-accent-hover: #1d55d4;
+  --color-on-accent: #fff;
+  --color-surface: #fff;
+  --color-muted: #f3f6fa;
+  --color-subtle: #f5f7fa;
+  --color-tint: #edf3ff;
+  --color-placeholder: #e2e8f0;
+  --color-field: #f4f6f9;
+  --color-text: var(--color-navy);
+  --color-text-2: #5b6d82;
+  --color-text-3: #55677c; /* 연한 배경(#edf3ff) 위에서도 4.5:1 이상 */
+  --color-border: #e1e7ef;
+  --color-border-strong: #cbd4df;
+  --color-error: #c62828;
+
+  --color-dark-surface: var(--color-navy);
+  --color-dark-card: #19344f;
+  --color-dark-border: #3c526c;
+  --color-dark-text-2: #c4d3eb;
+  --color-dark-accent: #b4ccf7;
+
+  /* 서체 */
+  --font-sans: 'Pretendard', 'Pretendard Variable', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+    'Noto Sans KR', Arial, sans-serif;
+  --text-h1: clamp(2.1875rem, 1.6rem + 2.2vw, 3rem); /* 35 → 48 */
+  --text-h2: clamp(1.625rem, 1.35rem + 1.1vw, 1.9375rem); /* 26 → 31 */
+  --text-h2-dark: clamp(1.6875rem, 1.4rem + 1.2vw, 2.0625rem); /* 27 → 33 */
+  --text-h3: 1.125rem;
+  --text-body: 0.9375rem; /* 15 */
+  --text-small: 0.8125rem; /* 13 */
+  --text-note: 0.75rem; /* 12 */
+  --text-micro: 0.6875rem; /* 11, 최소 */
+  --text-price: clamp(2.5rem, 2rem + 2vw, 3rem);
+  --text-stat: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);
+  --tracking-tight: -0.3px;
+
+  /* 간격·크기 */
+  --gutter: clamp(1.375rem, 0.9rem + 2vw, 2rem);
+  --section-y: clamp(2.4375rem, 1.8rem + 2.6vw, 4.5rem);
+  --content-max: 1080px;
+  --text-max: 560px;
+  --touch-min: 44px;
+  --header-h: 126px; /* sticky 헤더 실측 높이. 앵커 scroll-padding에 사용 */
+  --bottom-bar-h: 76px;
+
+  /* 라운드 */
+  --radius-photo: 18px;
+  --radius-card: 16px;
+  --radius-step: 14px;
+  --radius-button: 12px;
+  --radius-field: 10px;
+  --radius-pill: 999px;
+
+  /* 그림자 */
+  --shadow-card: 0 6px 25px #0c234008;
+  --shadow-photo: 0 15px 35px #0c234015;
+  --shadow-float: 0 5px 20px #0c234010;
+}
+
+@media (min-width: 900px) {
+  :root {
+    --header-h: 92px;
+  }
+}

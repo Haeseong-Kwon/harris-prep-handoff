@@ -1,0 +1,74 @@
+---
+// 03 비교. 좁은 화면에서는 표 영역만 가로 스크롤(키보드로도 스크롤 가능).
+import { comparison } from '../data/site';
+import Section from './Section.astro';
+---
+
+<Section id="compare" tone="muted" kicker="03 / THE DIFFERENCE" title={['활동 일정이 아닌,', '학교 시간표를 따릅니다.']}>
+  <div class="scroll" role="region" aria-labelledby="compare-caption" tabindex="0">
+    <table>
+      <caption id="compare-caption" class="sr-only">일반 영어캠프·단기 어학연수·HARRIS PREP 비교</caption>
+      <thead>
+        <tr>
+          <th scope="col">비교 기준</th>
+          {comparison.columns.map((c) => <th scope="col">{c}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {comparison.rows.map(([label, ...cells]) => (
+          <tr>
+            <th scope="row">{label}</th>
+            {cells.map((cell) => <td>{cell}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="note">{comparison.footnote}</p>
+</Section>
+
+<style>
+  .scroll {
+    margin-top: 26px;
+    overflow-x: auto;
+    border-radius: 15px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+  table {
+    width: 100%;
+    min-width: 510px;
+    border-collapse: collapse;
+    font-size: var(--text-note);
+  }
+  th,
+  td {
+    padding: 15px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #d1d8df;
+  }
+  thead th {
+    font-weight: 600;
+  }
+  tbody th {
+    font-weight: 500;
+  }
+  tr > :last-child {
+    background: var(--color-tint);
+    font-weight: 600;
+  }
+  thead tr > :last-child {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  @media (min-width: 769px) {
+    table {
+      font-size: 0.875rem;
+    }
+    th,
+    td {
+      padding: 18px 16px;
+    }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import { PUBLIC_CONSULT_ENDPOINT as CONSULT_ENDPOINT } from 'astro:env/client';
+import BrandHeader from '../components/BrandHeader.astro';
+import MobileContactBar from '../components/MobileContactBar.astro';
+import OperatorFooter from '../components/OperatorFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** 페이지 하단에 상담 섹션이 있으면 같은 페이지 앵커로, 없으면 홈 상담 섹션으로 연결 */
+  hasConsult?: boolean;
+}
+
+const { title, description, hasConsult = true } = Astro.props;
+const consultHref = hasConsult ? '#consult' : '/#consult';
+const fullTitle = title === 'HARRIS PREP' ? '톡픽의 호주 사립학교 단기유학 | HARRIS PREP' : `${title} | HARRIS PREP`;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0c2340" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="ko_KR" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문 바로가기</a>
+    {!CONSULT_ENDPOINT && <p class="review-banner">공개 전 검토 버전 · 상담 접수 연결 대기 · 입력 정보는 전송되지 않습니다</p>}
+    <BrandHeader consultHref={consultHref} />
+    <main id="main">
+      <slot />
+    </main>
+    <OperatorFooter />
+    <MobileContactBar consultHref={consultHref} />
+  </body>
+</html>
+
+<style>
+  .review-banner {
+    padding: 9px var(--gutter);
+    font-size: var(--text-micro);
+    color: var(--color-text-3);
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+  }
+  body {
+    padding-bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 769px) {
+    body {
+      padding-bottom: 0;
+    }
+  }
+</style>

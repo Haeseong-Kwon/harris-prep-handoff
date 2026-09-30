@@ -1,0 +1,53 @@
+---
+// 07 운영자. 대표 실사 확보 전 슬롯 유지 — 타인 사진으로 대체 금지.
+import Pending from './Pending.astro';
+import Section from './Section.astro';
+---
+
+<Section id="people" kicker="07 / THE PEOPLE BEHIND THE PROGRAM" title={['아이를 맡기기 전에,', '운영하는 사람을 만나세요.']}>
+  <div class="profile">
+    <div class="photo-slot"><span>[대표 실사 촬영 필요]</span></div>
+    <div>
+      <h3>[대표 성명 · 직책]</h3>
+      <Pending text="[자료 대기: 대표 교육 철학 3~4문장] / [자료 대기: 검증된 이력·담당 역할]" />
+      <p class="note">톡픽은 20여 년간 서울시·주요 대학·100개 이상 기업 임직원 영어교육을 진행해 온 모브랜드입니다.</p>
+      <Pending text="[검증 필요: 기관명·기간·기업 수 근거 및 로고 사용 권한] / [자료 대기: 직반응 스피킹 특허 등록 정보]" />
+    </div>
+  </div>
+  <p class="closing">집에서 시작하고, 세계에서 이어갑니다.<br />톡픽의 영어교육 경험을 기반으로 한 별도 학교 연계 과정, HARRIS PREP.</p>
+</Section>
+
+<style>
+  .profile {
+    display: grid;
+    gap: 22px;
+    margin-top: 24px;
+    padding: 17px;
+    border-radius: var(--radius-photo);
+    background: var(--color-subtle);
+  }
+  .photo-slot {
+    min-height: 260px;
+    background: #dfe6ee;
+  }
+  .closing {
+    max-width: var(--text-max);
+    margin: 24px auto 0;
+    text-align: center;
+    line-height: 1.85;
+    color: var(--color-text-2);
+  }
+  @media (min-width: 481px) {
+    .profile {
+      grid-template-columns: 170px 1fr;
+      padding: 20px;
+    }
+  }
+  @media (min-width: 960px) {
+    .profile {
+      grid-template-columns: 240px 1fr;
+      max-width: 860px;
+      margin-inline: auto;
+    }
+  }
+</style>

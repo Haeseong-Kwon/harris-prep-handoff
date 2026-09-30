@@ -1,0 +1,202 @@
+---
+// 01 Hero. 사진은 참고/자료 사진임을 캡션에 명시한다.
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container grid">
+    <div class="text">
+      <p class="kicker">톡픽의 호주 사립학교 단기유학 과정</p>
+      <h1 id="hero-title">배운 영어를 써보는 곳,<br /><em>호주 학교의 하루 속으로.</em></h1>
+      <p class="copy">
+        교복도, 시간표도, 과제도 현지 학생과 같이.<br />호주 퀸즐랜드 사립학교 정규 수업에<br />학교 텀 기준 최대 10주 동안 함께하는
+        별도 과정.
+      </p>
+      <p class="copy">초등 4~6학년 자녀의 첫 단기유학.<br />부모 동행 없이, 현지 상주 코칭과 주간 리포트로 함께합니다.</p>
+      <div class="actions">
+        <a class="btn" href="#consult">상담 신청 ↗</a>
+        <a class="btn btn--secondary" href="#journey">10주 과정 보기 ↓</a>
+      </div>
+    </div>
+    <div class="collage">
+      <figure class="landscape">
+        <img src="/assets/brisbane-reference.jpg" width="1000" height="750" fetchpriority="high" alt="브리즈번 사우스뱅크에서 바라본 도시 풍경, 2008년 촬영" />
+        <figcaption>AUSTRALIA / QUEENSLAND<span>브리즈번 풍경 · 2008년 참고 사진</span></figcaption>
+      </figure>
+      <figure class="school">
+        <img src="/assets/ipswich-school.jpg" width="1000" height="750" alt="입스위치 그래머 스쿨 역사적 건물 외관, 2016년 촬영" />
+        <figcaption>Ipswich Grammar School<span>학교 건물 · 2016년 자료 사진</span></figcaption>
+      </figure>
+      <p class="stamp"><strong>10</strong><span>WEEKS<br />학교 텀 기준 최대</span></p>
+    </div>
+  </div>
+  <div class="container">
+    <ul class="strip">
+      <li>정규 수업 편입</li>
+      <li>현지 상주 코칭</li>
+      <li>주간 리포트</li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+    background: linear-gradient(180deg, var(--color-surface) 65%, var(--color-tint));
+  }
+  .kicker {
+    margin-bottom: 22px;
+    font-size: var(--text-micro);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+  }
+  h1 {
+    font-size: var(--text-h1);
+    line-height: 1.25;
+    letter-spacing: -2.2px;
+  }
+  em {
+    font-style: normal;
+    color: var(--color-accent);
+  }
+  .copy {
+    max-width: var(--text-max);
+    margin-top: 18px;
+    line-height: 1.85;
+    color: var(--color-text-2);
+  }
+  .collage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 10px;
+    align-items: center;
+    margin-top: 25px;
+    padding-bottom: 18px;
+  }
+  figure {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-photo);
+    background: var(--color-navy);
+    box-shadow: var(--shadow-photo);
+  }
+  .landscape {
+    height: 235px;
+  }
+  .school {
+    height: 185px;
+    margin-top: 30px;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .landscape img {
+    object-position: 70% 50%;
+  }
+  .school img {
+    object-position: 45% 50%;
+  }
+  figcaption {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 40px 11px 11px;
+    background: linear-gradient(transparent, #0c2340e8);
+    color: #fff;
+    font-size: var(--text-micro);
+    letter-spacing: 0.6px;
+  }
+  figcaption span {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    color: #dde7f3;
+    letter-spacing: 0;
+  }
+  .stamp {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--color-surface);
+    border: 1px solid #dde6f3;
+    border-radius: 13px;
+    box-shadow: var(--shadow-float);
+  }
+  .stamp strong {
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+  .stamp span {
+    font-size: 10px;
+    line-height: 1.5;
+    color: #536880;
+  }
+  .strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+    margin: 26px 0 0;
+    padding: 21px 0;
+    list-style: none;
+    border-top: 1px solid #d3deed;
+    font-size: var(--text-micro);
+    color: var(--color-text-2);
+  }
+  @media (min-width: 481px) {
+    .collage {
+      grid-template-columns: 1.45fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .landscape {
+      height: 300px;
+    }
+    .school {
+      height: 235px;
+      margin-top: 20px;
+    }
+    figcaption {
+      padding: 45px 17px 15px;
+      font-size: var(--text-note);
+    }
+    figcaption span {
+      font-size: var(--text-micro);
+    }
+    .stamp {
+      top: 4px;
+      right: 18px;
+      padding: 11px 16px;
+    }
+    .stamp strong {
+      font-size: 2.1875rem;
+    }
+    .strip {
+      font-size: var(--text-note);
+    }
+  }
+  @media (min-width: 960px) {
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .collage {
+      margin-top: 0;
+    }
+    .landscape {
+      height: 340px;
+    }
+    .school {
+      height: 260px;
+    }
+  }
+</style>

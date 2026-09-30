@@ -1,0 +1,12 @@
+---
+import Consultation from '../components/Consultation.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="자주 묻는 질문" description="부모 동행, 영어 수준, 출결, 비자, 비용, 환불, 선발, 안전에 대한 질문을 모았습니다.">
+  <PageIntro kicker="FAQ" title={['마음에 남은 질문을', '먼저 풀어보세요.']} />
+  <FAQAccordion kicker="11 / QUESTIONS BEFORE YOU DECIDE" title={['신청 전,', '먼저 확인하세요.']} />
+  <Consultation />
+</Base>

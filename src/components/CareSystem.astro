@@ -1,0 +1,82 @@
+---
+// 06 돌봄. 남색 강조 구간. 응급·야간 대응은 미확정이므로 약속하지 않는다.
+import { care } from '../data/site';
+import Pending from './Pending.astro';
+import Section from './Section.astro';
+---
+
+<Section
+  id="care"
+  tone="dark"
+  kicker="06 / CARE THAT PARENTS CAN SEE"
+  title={['아이는 현지에.', '부모는, 소식 가까이에.']}
+  copy={['현지에서는 상주 코칭으로. 한국에서는 주간 리포트로.', '떨어져 있는 동안 무엇을 확인할 수 있는지 먼저 설명합니다.']}
+>
+  <ol class="items">
+    {care.map((item, i) => (
+      <li class="item">
+        <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <h3>{item.title}</h3>
+        {item.body && <p>{item.body}</p>}
+        {item.pending && <Pending text={item.pending} />}
+      </li>
+    ))}
+  </ol>
+  <div class="actions actions--center">
+    <a class="btn" href="#consult">우리 아이도 가능한지 물어보기 ↗</a>
+  </div>
+</Section>
+
+<style>
+  .items {
+    display: grid;
+    gap: 12px;
+    margin: 32px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .item {
+    padding: 18px;
+    border: 1px solid var(--color-dark-border);
+    border-radius: var(--radius-card);
+    background: var(--color-dark-card);
+  }
+  .num {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-dark-accent);
+  }
+  p {
+    margin-top: 6px;
+    font-size: var(--text-small);
+    color: var(--color-dark-text-2);
+  }
+  .item :global(.pending summary),
+  .item :global(.pending p) {
+    color: var(--color-dark-text-2);
+  }
+  @media (min-width: 481px) {
+    .items {
+      grid-template-columns: 1fr 1fr;
+    }
+    .item {
+      padding: 20px;
+    }
+    .item:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 960px) {
+    .items {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .item {
+      grid-column: span 2;
+    }
+    .item:nth-child(-n + 2) {
+      grid-column: span 3;
+    }
+  }
+</style>

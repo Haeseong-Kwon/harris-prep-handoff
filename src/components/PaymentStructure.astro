@@ -1,0 +1,66 @@
+---
+// 10 비용. 3,900만 원은 예정 금액 — 확정처럼 표기하지 않는다.
+import { payment } from '../data/site';
+import Section from './Section.astro';
+---
+
+<Section id="cost" tone="tint" kicker="10 / COST & PAYMENT" title={['큰 결정일수록,', '비용부터 펼쳐놓겠습니다.']}>
+  <p class="price">{payment.price} <small>(예정)</small></p>
+  <p class="note center">{payment.priceNote[0]}<br />{payment.priceNote[1]}</p>
+  <dl class="list">
+    {payment.rows.map(([label, value]) => (
+      <div><dt>{label}</dt><dd>{value}</dd></div>
+    ))}
+  </dl>
+  <div class="actions actions--center">
+    <a class="btn" href="#consult">납부 구조 상담 ↗</a>
+  </div>
+</Section>
+
+<style>
+  .price {
+    margin-top: 22px;
+    font-size: var(--text-price);
+    font-weight: 700;
+    letter-spacing: -2px;
+    color: var(--color-accent);
+    text-align: center;
+  }
+  small {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--color-text-2);
+  }
+  .list {
+    max-width: 640px;
+    margin: 20px auto 0;
+    padding: 10px 17px;
+    border-radius: var(--radius-photo);
+    background: var(--color-surface);
+  }
+  .list div {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 15px 0;
+    font-size: var(--text-note);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .list div:last-child {
+    border-bottom: 0;
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  @media (min-width: 481px) {
+    .list {
+      padding: 12px 23px;
+    }
+    .list div {
+      font-size: 0.875rem;
+    }
+  }
+</style>

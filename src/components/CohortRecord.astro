@@ -1,0 +1,37 @@
+---
+// 08 1기 기록. 스톡 이미지를 실제 참가 기록으로 사용하지 않는다.
+import Pending from './Pending.astro';
+import Section from './Section.astro';
+---
+
+<Section id="cohort" tone="muted" kicker="08 / THE FIRST COHORT" title={['첫 과정은 마쳤습니다.', '기록은 확인되는 대로 공개합니다.']}>
+  <div class="layout">
+    <div class="grid-2">
+      <div class="card"><span class="stat">3명</span>1기 파일럿 프로그램 완료</div>
+      <div class="card"><h3>귀국생 성과</h3><p class="note">1기 귀국생 성과 공개 예정</p></div>
+    </div>
+    <div class="photo-slot">
+      <span>[실사 촬영 필요: 1기 활동 기록]</span>
+      <small>학생·보호자 공개 동의 확인 후 사용</small>
+    </div>
+  </div>
+  <p class="note">[후기 수집 중]</p>
+  <Pending text="[검증 필요: 귀국 후 성과 증빙·공개 동의]" />
+</Section>
+
+<style>
+  .photo-slot {
+    margin-top: 26px;
+  }
+  @media (min-width: 960px) {
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    .photo-slot {
+      margin-top: 26px;
+    }
+  }
+</style>

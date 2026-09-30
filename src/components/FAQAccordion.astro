@@ -1,0 +1,66 @@
+---
+// 11 FAQ. native details/summary, 여러 항목 동시 펼침 가능.
+import { faqs, type FaqTopic } from '../data/site';
+import Section from './Section.astro';
+
+interface Props {
+  topics?: FaqTopic[];
+  kicker?: string;
+  title?: string[];
+  tone?: 'white' | 'muted';
+}
+
+const { tone = 'white', topics, kicker = '11 / QUESTIONS BEFORE YOU DECIDE', title = ['신청 전,', '먼저 확인하세요.'] } = Astro.props;
+const items = topics ? faqs.filter((f) => topics.includes(f.topic)) : faqs;
+---
+
+<Section id="faq" tone={tone} kicker={kicker} title={title}>
+  <div class="list">
+    {items.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+</Section>
+
+<style>
+  .list {
+    max-width: 760px;
+    margin: 26px auto 0;
+  }
+  details {
+    margin-bottom: 10px;
+    border-radius: var(--radius-button);
+    background: var(--color-subtle);
+  }
+  summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    padding: 14px 44px 14px 19px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    position: absolute;
+    right: 19px;
+    font-size: 20px;
+    color: var(--color-accent);
+  }
+  details[open] summary::after {
+    content: '−';
+  }
+  p {
+    padding: 0 19px 17px;
+    font-size: var(--text-small);
+    color: var(--color-text-2);
+  }
+</style>

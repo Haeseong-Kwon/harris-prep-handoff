@@ -1,0 +1,22 @@
+---
+import Consultation from '../components/Consultation.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import JourneyTimeline from '../components/JourneyTimeline.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ProgramComparison from '../components/ProgramComparison.astro';
+import SchoolProfile from '../components/SchoolProfile.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="과정 안내" description="캠프·어학연수와 무엇이 다른지, 출국 전부터 귀국 후까지의 흐름, 참여 학교 Ipswich Grammar School을 안내합니다.">
+  <PageIntro
+    kicker="PROGRAM"
+    title={['체험 일정이 아닌,', '현지 학생의 시간표로.']}
+    copy="호주 퀸즐랜드 사립학교 정규 수업에 학교 텀 기준 최대 10주 동안 함께하는 별도 과정입니다."
+  />
+  <ProgramComparison />
+  <JourneyTimeline />
+  <SchoolProfile />
+  <FAQAccordion kicker="FAQ / PROGRAM" title={['과정에 대해', '자주 묻는 질문']} topics={['eligibility', 'selection', 'school', 'visa']} />
+  <Consultation />
+</Base>

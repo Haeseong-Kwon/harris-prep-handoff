@@ -1,0 +1,14 @@
+---
+import Consultation from '../components/Consultation.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import PageIntro from '../components/PageIntro.astro';
+import PaymentStructure from '../components/PaymentStructure.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="비용" description="2기 예정 금액, 예약금, 분할납부와 별도 비용을 안내합니다. 최종 총액은 상담 시 안내합니다.">
+  <PageIntro kicker="COST" title={['참가비와 별도 비용을', '함께 확인하세요.']} copy="최종 총액·포함 항목·동행 여부는 상담 시 안내합니다." />
+  <PaymentStructure />
+  <FAQAccordion kicker="FAQ / COST" title={['비용에 대해', '자주 묻는 질문']} topics={['cost', 'refund', 'selection']} />
+  <Consultation />
+</Base>

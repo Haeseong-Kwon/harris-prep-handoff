@@ -1,0 +1,27 @@
+[tools]
+node = "24"
+pnpm = "12"
+
+[tasks.setup]
+run = ["pnpm install", "pnpm exec playwright install chromium"]
+
+[tasks.dev]
+run = "pnpm dev"
+
+[tasks.lint]
+run = "pnpm check"
+
+[tasks.typecheck]
+run = "pnpm check"
+
+[tasks.test]
+run = "pnpm test"
+
+[tasks.e2e]
+run = "pnpm e2e"
+
+[tasks.check]
+depends = ["typecheck", "test"]
+
+[tasks.ci]
+depends = ["typecheck", "test", "e2e"]

@@ -1,0 +1,52 @@
+---
+import PageIntro from '../components/PageIntro.astro';
+import { brand, contact } from '../data/site';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="개인정보 처리방침" description="HARRIS PREP 상담 신청 개인정보 처리방침." hasConsult={false}>
+  <PageIntro kicker="PRIVACY" title={['개인정보 처리방침']} copy={`운영 주체 ${brand.operator}`} />
+  <section class="container body">
+    <p class="notice">정책 전문이 확정되기 전입니다. 확정 전까지 상담 신청 정보는 접수되지 않습니다.</p>
+    <dl>
+      <div><dt>수집 항목</dt><dd>보호자 성함, 연락처, 자녀 학년, 상담 내용 (자녀 이름·생년월일은 수집하지 않음)</dd></div>
+      <div><dt>수집·이용 목적</dt><dd>[자료 대기]</dd></div>
+      <div><dt>보유 및 이용 기간</dt><dd>[자료 대기]</dd></div>
+      <div><dt>동의 거부 권리 및 불이익</dt><dd>[자료 대기]</dd></div>
+      <div><dt>만 14세 미만 법정대리인 확인 방법</dt><dd>[자료 대기]</dd></div>
+      <div><dt>마케팅 정보 수신 (선택)</dt><dd>[자료 대기: 목적·항목·기간·수신 채널]</dd></div>
+      <div><dt>개인정보 보호책임자</dt><dd>[자료 대기]</dd></div>
+      <div><dt>문의</dt><dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd></div>
+    </dl>
+  </section>
+</Base>
+
+<style>
+  .body {
+    padding-block: 32px 56px;
+    max-width: 760px;
+  }
+  .notice {
+    padding: 16px 18px;
+    border-radius: var(--radius-button);
+    background: var(--color-tint);
+    font-size: var(--text-small);
+  }
+  dl {
+    margin: 24px 0 0;
+  }
+  dl div {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  dt {
+    font-weight: 600;
+  }
+  dd {
+    margin: 4px 0 0;
+    color: var(--color-text-2);
+  }
+  a {
+    color: var(--color-accent);
+  }
+</style>
