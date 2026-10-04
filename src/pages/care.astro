@@ -5,12 +5,12 @@ import PageNav from '../components/PageNav.astro';
 import PageTitle from '../components/PageTitle.astro';
 import Section from '../components/Section.astro';
 import StepFlow from '../components/StepFlow.astro';
-import { careFlow, careQuestions } from '../data/content';
+import { careFlow, careQuestions, pageHeroes } from '../data/content';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="현지 케어">
-  <PageTitle eyebrow="CARE" title="아이는 현지에. 부모는 소식 가까이에." lead="현지 상주 코칭과 주간 리포트, 추가 확인이 필요한 돌봄 범위를 안내합니다." />
+  <PageTitle {...pageHeroes.care} />
   <PageNav
     items={[
       { id: 'care-flow', label: '떨어져 있는 동안' },

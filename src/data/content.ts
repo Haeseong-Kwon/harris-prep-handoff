@@ -1,6 +1,8 @@
 // 페이지 확장 콘텐츠. 원칙: docs/handoff-website/CONTENT-CHECKLIST.md의 "확정" 항목과
 // COPY.md 원문만 사실로 쓴다. 미확정 항목은 질문·체크리스트 형태로만 노출하고 답을 지어내지 않는다.
 
+import { contact } from './site';
+
 export interface Point {
   title: string;
   body: string;
@@ -130,3 +132,120 @@ export const consultPrep: string[] = [
 
 /** 홈: FAQ 미리보기 (faqs 인덱스) */
 export const homeFaqIndexes = [0, 1, 4] as const;
+
+/** 하위 페이지 히어로. 사진은 성격(참고/자료)을 캡션에 밝히고, 카드는 확정 정보만 담는다. */
+export type HeroAside =
+  | { kind: 'photo'; src: string; width: number; height: number; alt: string; caption: string; position?: string }
+  | { kind: 'card'; label: string; rows: [label: string, value: string, href?: string][]; note?: string; link?: { href: string; label: string } }
+  | { kind: 'lockup' };
+
+export interface PageHero {
+  index?: string;
+  crumb: string;
+  eyebrow: string;
+  title: string;
+  lead: string;
+  chips?: string[];
+  aside?: HeroAside;
+}
+
+export const pageHeroes = {
+  program: {
+    index: '01',
+    crumb: '프로그램',
+    eyebrow: 'PROGRAM',
+    title: '캠프보다, 학교의 하루.',
+    lead: '과정의 차이와 준비부터 귀국까지의 흐름을 살펴보세요.',
+    chips: ['학교 텀 기준 최대 10주', '정규 수업 편입', '부모 동행 없이 진행'],
+    aside: {
+      kind: 'photo',
+      src: '/assets/school-classroom.jpg',
+      width: 640,
+      height: 480,
+      alt: '협업사 공개 학교생활 참고 사진: 교실 속 학생들',
+      caption: '학교생활 참고 사진 · 본 과정 1기 기록이 아닙니다.',
+      position: '54% center',
+    },
+  },
+  school: {
+    index: '02',
+    crumb: '학교',
+    eyebrow: 'SCHOOL',
+    title: '함께할 학교를 소개합니다.',
+    lead: '확인된 학교 정보와 학교생활 참고 사진을 안내합니다.',
+    chips: ['Ipswich Grammar School', '호주 퀸즐랜드주', '1863년 설립'],
+    aside: {
+      kind: 'photo',
+      src: '/assets/ipswich-school.jpg',
+      width: 1000,
+      height: 750,
+      alt: 'Ipswich Grammar School 건물 외관, 2016년 자료 사진',
+      caption: '실제 학교 건물 자료 사진 · Shiftchange / CC0 · 2016',
+      position: '50% 43%',
+    },
+  },
+  care: {
+    index: '03',
+    crumb: '현지 케어',
+    eyebrow: 'CARE',
+    title: '아이는 현지에. 부모는 소식 가까이에.',
+    lead: '현지 상주 코칭과 주간 리포트, 추가 확인이 필요한 돌봄 범위를 안내합니다.',
+    chips: ['부모 동행 없이 진행', '현지 상주 코칭', '주간 리포트'],
+    aside: {
+      kind: 'card',
+      label: 'CARE AT A GLANCE',
+      rows: [
+        ['현지에서', '상주 코칭'],
+        ['한국에서', '주간 리포트'],
+        ['돌봄 세부 범위', '확인 중'],
+      ],
+      note: '숙소·야간 돌봄·긴급 연락 범위는 신청 전에 함께 검토합니다.',
+      link: { href: '#care-questions', label: '확인할 질문 보기' },
+    },
+  },
+  about: {
+    index: '04',
+    crumb: '브랜드 소개',
+    eyebrow: 'ABOUT',
+    title: '톡픽에서 시작한 학교 연계 과정.',
+    lead: 'HARRIS PREP의 브랜드와 운영진, 첫 과정 기록을 소개합니다.',
+    chips: ['톡픽의 단기유학 브랜드', '1기 파일럿 3명 완료'],
+    aside: { kind: 'lockup' },
+  },
+  guide: {
+    index: '05',
+    crumb: '비용·FAQ',
+    eyebrow: 'COST & FAQ',
+    title: '결정 전에 확인할 정보.',
+    lead: '예정 비용과 납부 구조, 참가 전 자주 묻는 질문을 모았습니다.',
+    chips: ['예정 비용', '납부 흐름', '자주 묻는 질문 8개'],
+    aside: {
+      kind: 'card',
+      label: '2기 예정 금액',
+      rows: [
+        ['패키지', '3,900만 원 (예정)'],
+        ['예약금', '350만 원'],
+        ['학비 납부', '분할납부 가능'],
+      ],
+      note: '최종 총액·포함 항목·동행 여부는 상담 시 안내합니다.',
+      link: { href: '#cost', label: '비용 자세히 보기' },
+    },
+  },
+  contact: {
+    crumb: '상담',
+    eyebrow: 'CONTACT',
+    title: '아이 이야기부터 시작하세요.',
+    lead: '희망 시기와 참가 조건, 돌봄 범위와 비용을 함께 확인합니다.',
+    chips: ['초등 4~6학년 대상 상담', '소수 선발제'],
+    aside: {
+      kind: 'card',
+      label: 'DIRECT CONTACT',
+      rows: [
+        ['전화', contact.phoneDisplay, contact.phoneHref],
+        ['이메일', contact.email, `mailto:${contact.email}`],
+        ['상담 담당', contact.manager],
+      ],
+      link: { href: '#consult', label: '상담 신청서 작성' },
+    },
+  },
+} satisfies Record<string, PageHero>;

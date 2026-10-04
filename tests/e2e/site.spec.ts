@@ -43,6 +43,17 @@ test('header nav links to every section page and marks the current one', async (
   }
 });
 
+test('sub page heroes show breadcrumb and caption every photo', async ({ page }) => {
+  for (const [href, label] of [...NAV, ['/contact', '상담']] as const) {
+    await page.goto(href);
+    const hero = page.locator('section.hero').first();
+    await expect(hero.getByRole('navigation', { name: '현재 위치' }).locator('[aria-current="page"]')).toHaveText(label);
+    for (const fig of await hero.locator('figure').all()) {
+      await expect(fig.locator('figcaption')).toContainText(/사진/);
+    }
+  }
+});
+
 test('home explore links are real document links', async ({ page }) => {
   await page.goto('/');
   const hrefs = await page.locator('#explore-title ~ ul a').evaluateAll((els) => els.map((a) => a.getAttribute('href')));

@@ -7,12 +7,12 @@ import PageCta from '../components/PageCta.astro';
 import PageNav from '../components/PageNav.astro';
 import PageTitle from '../components/PageTitle.astro';
 import Section from '../components/Section.astro';
-import { programFacts } from '../data/content';
+import { pageHeroes, programFacts } from '../data/content';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="프로그램">
-  <PageTitle eyebrow="PROGRAM" title="캠프보다, 학교의 하루." lead="과정의 차이와 준비부터 귀국까지의 흐름을 살펴보세요." />
+  <PageTitle {...pageHeroes.program} />
   <PageNav
     items={[
       { id: 'overview', label: '한눈에 보기' },

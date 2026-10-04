@@ -3,12 +3,12 @@ import ConsultationForm from '../components/ConsultationForm.astro';
 import PageTitle from '../components/PageTitle.astro';
 import Section from '../components/Section.astro';
 import StepFlow from '../components/StepFlow.astro';
-import { consultFlow, consultPrep } from '../data/content';
+import { consultFlow, consultPrep, pageHeroes } from '../data/content';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="상담">
-  <PageTitle eyebrow="CONTACT" title="아이 이야기부터 시작하세요." lead="희망 시기와 참가 조건, 돌봄 범위와 비용을 함께 확인합니다." />
+  <PageTitle {...pageHeroes.contact} />
   <Section id="consult-guide" eyebrow="HOW IT WORKS" title={['상담은', '이렇게 진행됩니다.']}>
     <div class="guide">
       <StepFlow steps={consultFlow} />

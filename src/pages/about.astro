@@ -7,12 +7,12 @@ import PartnerCard from '../components/PartnerCard.astro';
 import PointsGrid from '../components/PointsGrid.astro';
 import RepresentativeProfile from '../components/RepresentativeProfile.astro';
 import Section from '../components/Section.astro';
-import { brandStructure, principles } from '../data/content';
+import { brandStructure, pageHeroes, principles } from '../data/content';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="브랜드 소개">
-  <PageTitle eyebrow="ABOUT" title="톡픽에서 시작한 학교 연계 과정." lead="HARRIS PREP의 브랜드와 운영진, 첫 과정 기록을 소개합니다." />
+  <PageTitle {...pageHeroes.about} />
   <PageNav
     items={[
       { id: 'brand', label: '브랜드' },
