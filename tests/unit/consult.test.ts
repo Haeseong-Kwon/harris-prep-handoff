@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   nextConcernMessage,
   normalizePhone,
+  parseConcernParam,
   submitConsult,
   toPayload,
   validateConsult,
@@ -116,5 +117,19 @@ describe('nextConcernMessage', () => {
 describe('normalizePhone', () => {
   it('strips spaces and hyphens', () => {
     expect(normalizePhone(' 010-1234 5678 ')).toBe('01012345678');
+  });
+});
+
+describe('parseConcernParam', () => {
+  it.each([
+    ['?concern=0', 0],
+    ['?concern=3', 3],
+    ['?a=1&concern=2', 2],
+  ])('accepts %s', (search, expected) => {
+    expect(parseConcernParam(search, 4)).toBe(expected);
+  });
+
+  it.each(['', '?concern=4', '?concern=-1', '?concern=1.0', '?concern=%3Cscript%3E', '?concern=01'])('rejects %s', (search) => {
+    expect(parseConcernParam(search, 4)).toBeNull();
   });
 });

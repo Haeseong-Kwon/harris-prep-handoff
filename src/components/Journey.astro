@@ -1,0 +1,91 @@
+---
+// Journey: 8단계. 학교생활(최대 10주)과 전후 준비·관리 기간을 구분해 묶는다.
+import { journey } from '../data/site';
+import Pending from './Pending.astro';
+import Section from './Section.astro';
+
+const phases = [
+  { label: '출국 전 · 준비', steps: journey.slice(0, 3), offset: 0 },
+  { label: '현지 · 학교생활 최대 10주', steps: journey.slice(3, 6), offset: 3 },
+  { label: '귀국 후', steps: journey.slice(6), offset: 6 },
+];
+---
+
+<Section
+  id="journey"
+  tone="soft"
+  eyebrow="BEFORE, DURING & AFTER"
+  title={['출국 전부터 귀국 후까지.', '과정의 흐름을 먼저 봅니다.']}
+  copy={['학교생활은 최대 10주. 준비와 귀국 후 단계는 별도 일정입니다.']}
+>
+  <div class="phases">
+    {phases.map((phase, p) => (
+      <section class:list={['phase', { 'phase--school': p === 1 }]} aria-label={phase.label}>
+        <p class="phase-label">{phase.label}</p>
+        <ol start={phase.offset + 1}>
+          {phase.steps.map((step, i) => (
+            <li>
+              <span class="num" aria-hidden="true">{String(phase.offset + i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{step.title}</h3>
+                {step.body && <p>{step.body}</p>}
+                {step.pending && <Pending text={step.pending} />}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+</Section>
+
+<style>
+  .phases {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 0 35px;
+    margin-top: 40px;
+  }
+  .phase-label {
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-navy);
+    font-size: var(--text-meta);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .phase--school .phase-label {
+    border-color: var(--color-sky-strong);
+    color: var(--color-sky-strong);
+  }
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: flex;
+    gap: 20px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .num {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    line-height: 1.5;
+  }
+  li p {
+    margin-top: 6px;
+    font-size: var(--text-ui);
+    color: var(--color-muted);
+  }
+  li :global(.pending) {
+    margin-top: 2px;
+  }
+  @media (max-width: 1000px) {
+    .phases {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+</style>

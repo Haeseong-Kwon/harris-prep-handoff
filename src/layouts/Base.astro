@@ -1,27 +1,26 @@
 ---
 import '../styles/global.css';
 import { PUBLIC_CONSULT_ENDPOINT as CONSULT_ENDPOINT } from 'astro:env/client';
-import BrandHeader from '../components/BrandHeader.astro';
-import MobileContactBar from '../components/MobileContactBar.astro';
-import OperatorFooter from '../components/OperatorFooter.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 
 interface Props {
   title: string;
-  description: string;
-  /** 페이지 하단에 상담 섹션이 있으면 같은 페이지 앵커로, 없으면 홈 상담 섹션으로 연결 */
-  hasConsult?: boolean;
+  description?: string;
 }
 
-const { title, description, hasConsult = true } = Astro.props;
-const consultHref = hasConsult ? '#consult' : '/#consult';
-const fullTitle = title === 'HARRIS PREP' ? '톡픽의 호주 사립학교 단기유학 | HARRIS PREP' : `${title} | HARRIS PREP`;
+const DEFAULT_DESCRIPTION = '톡픽의 단기유학 브랜드 HARRIS PREP. 호주 사립학교 정규 수업 학교 연계 과정 안내.';
+const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
+const fullTitle = `${title} | HARRIS PREP`;
 ---
 
 <!doctype html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- 공개 전 검토용. 공개 검수 후 제거 (handoff README) -->
+    <meta name="robots" content="noindex,nofollow" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0c2340" />
@@ -35,30 +34,21 @@ const fullTitle = title === 'HARRIS PREP' ? '톡픽의 호주 사립학교 단�
   </head>
   <body>
     <a class="skip-link" href="#main">본문 바로가기</a>
-    {!CONSULT_ENDPOINT && <p class="review-banner">공개 전 검토 버전 · 상담 접수 연결 대기 · 입력 정보는 전송되지 않습니다</p>}
-    <BrandHeader consultHref={consultHref} />
+    {!CONSULT_ENDPOINT && <p class="review">개발 검토용 · 미확정 정보는 자료 대기로 표시 · 상담 정보 전송 없음</p>}
+    <SiteHeader />
     <main id="main">
       <slot />
     </main>
-    <OperatorFooter />
-    <MobileContactBar consultHref={consultHref} />
+    <SiteFooter />
   </body>
 </html>
 
 <style>
-  .review-banner {
-    padding: 9px var(--gutter);
-    font-size: var(--text-micro);
-    color: var(--color-text-3);
-    border-bottom: 1px solid var(--color-border);
+  .review {
+    padding: 8px 20px;
+    background: var(--color-navy);
+    color: #dbe8f0;
+    font-size: var(--text-meta);
     text-align: center;
-  }
-  body {
-    padding-bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom));
-  }
-  @media (min-width: 769px) {
-    body {
-      padding-bottom: 0;
-    }
   }
 </style>

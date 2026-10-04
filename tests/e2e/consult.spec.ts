@@ -15,11 +15,11 @@ test.describe('before a consult endpoint is configured', () => {
   test('submission stays disabled and nothing is sent', async ({ page }) => {
     const posts: string[] = [];
     page.on('request', (r) => r.method() === 'POST' && posts.push(r.url()));
-    await page.goto('/#consult');
+    await page.goto('/contact');
     const submit = page.locator('[data-submit]');
     await expect(submit).toBeDisabled();
     await expect(submit).toHaveText('카카오톡 채널 상담 예약 · 연결 대기');
-    await expect(page.locator('.review-banner')).toBeVisible();
+    await expect(page.locator('.review')).toBeVisible();
 
     await fillValid(page);
     await page.locator('#consult-name').press('Enter');
@@ -36,8 +36,8 @@ test.describe('with a consult endpoint', () => {
       calls += 1;
       return route.fulfill({ status: 201 });
     });
-    await page.goto(`${LIVE}/#consult`);
-    await expect(page.locator('.review-banner')).toHaveCount(0);
+    await page.goto(`${LIVE}/contact`);
+    await expect(page.locator('.review')).toHaveCount(0);
 
     await page.click('[data-submit]');
     await expect(page.locator('#consult-name-error')).toHaveText('보호자 성함을 입력해 주세요.');
@@ -65,7 +65,7 @@ test.describe('with a consult endpoint', () => {
       await gate;
       await route.fulfill({ status: 201 });
     });
-    await page.goto(`${LIVE}/#consult`);
+    await page.goto(`${LIVE}/contact`);
     await fillValid(page);
     await page.fill('#consult-message', '희망 시기 문의');
     await page.click('[data-submit]');
@@ -95,7 +95,7 @@ test.describe('with a consult endpoint', () => {
       ids.push(route.request().postDataJSON().submissionId);
       return route.fulfill({ status: fail ? 500 : 201 });
     });
-    await page.goto(`${LIVE}/#consult`);
+    await page.goto(`${LIVE}/contact`);
     await fillValid(page);
     await page.click('[data-submit]');
 
@@ -113,7 +113,7 @@ test.describe('with a consult endpoint', () => {
 
   test('reports a network failure without losing input', async ({ page }) => {
     await page.route(MOCK_ENDPOINT, (route) => route.abort('internetdisconnected'));
-    await page.goto(`${LIVE}/#consult`);
+    await page.goto(`${LIVE}/contact`);
     await fillValid(page);
     await page.click('[data-submit]');
     await expect(page.locator('[data-status]')).toContainText('네트워크 연결을 확인한 뒤');

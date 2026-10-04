@@ -1,87 +1,113 @@
 ---
-// 05 학교. 실제 학교 건물 자료 사진 + 확정 사실만 표기.
+// SchoolProfile + SchoolGallery. 협업사 학교생활 사진은 본 과정 참가 기록과 구분해 표기한다.
 import Pending from './Pending.astro';
 import Section from './Section.astro';
+
+const gallery = [
+  { src: '/assets/school-classroom.jpg', width: 640, height: 480, alt: '교실 속 학생들의 학교생활 참고 사진', caption: '교실 안에서 함께하는 하루' },
+  { src: '/assets/school-uniform.jpg', width: 950, height: 713, alt: '교복을 입은 학생들의 학교생활 참고 사진', caption: '교복을 입고 학교로' },
+];
 ---
 
 <Section
   id="school"
-  tone="muted"
-  kicker="05 / THE SCHOOL"
+  eyebrow="THE SCHOOL"
   title={['Ipswich', 'Grammar School']}
   copy={['호주 퀸즐랜드주 · 1863년 설립', '학교 정규 학기에 편입해 현지 학생과 같은 수업에 참여합니다.']}
 >
-  <div class="layout">
+  <div class="profile">
     <dl class="stats">
-      <div class="card"><dt>학교 설립 연도</dt><dd class="stat">1863</dd></div>
-      <div class="card"><dt>학교 정규 학기 기준</dt><dd class="stat">최대 10주</dd></div>
+      <div><dt>학교 설립 연도</dt><dd>1863</dd></div>
+      <div><dt>학교 정규 학기 기준</dt><dd>최대 10주</dd></div>
     </dl>
-    <figure>
-      <img src="/assets/ipswich-school.jpg" width="1000" height="750" loading="lazy" alt="Ipswich Grammar School 건물 외관" />
-      <figcaption>실제 학교 건물 자료 사진 · Shiftchange / CC0 · 2016년 촬영, 현재 모습과 다를 수 있습니다.</figcaption>
+    <figure class="main">
+      <img src="/assets/ipswich-school.jpg" width="1000" height="750" alt="Ipswich Grammar School 건물 외관" />
+      <figcaption class="caption">실제 학교 건물 자료 사진 · Shiftchange / CC0 · 2016년 촬영, 현재 모습과 다를 수 있습니다.</figcaption>
     </figure>
   </div>
+
+  <div class="gallery">
+    {gallery.map((g) => (
+      <figure>
+        <img src={g.src} width={g.width} height={g.height} loading="lazy" alt={g.alt} />
+        <figcaption class="caption">{g.caption}</figcaption>
+      </figure>
+    ))}
+  </div>
+  <p class="note">협업사 공개 학교생활 참고 사진입니다. 본 과정 참가 기록과는 구분합니다.</p>
   <Pending text="[자료 대기: 대상 학년·성별·참가 자격, 학교 공식 확인 자료] / [자료 대기: 학교별 특장점 표 및 추가 학교 정보]" />
 </Section>
 
 <style>
-  .stats {
+  .profile {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 26px 0 0;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 40px;
   }
   .stats div {
     display: flex;
     flex-direction: column-reverse;
-    justify-content: flex-end;
+    padding: 22px 0;
+    border-top: 2px solid var(--color-navy);
+  }
+  .stats div + div {
+    border-top-width: 1px;
+    border-top-color: var(--color-line);
   }
   dd {
-    margin: 0;
+    font-size: 2.3rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
   }
   dt {
-    font-size: var(--text-small);
-    color: var(--color-text-2);
+    color: var(--color-muted);
   }
-  figure {
-    margin-top: 27px;
-    overflow: hidden;
-    border-radius: var(--radius-photo);
-    background: var(--color-surface);
-  }
-  img {
+  .main img {
     width: 100%;
-    height: 235px;
+    height: 400px;
     object-fit: cover;
-    object-position: 50% 43%;
   }
-  figcaption {
-    padding: 13px 18px;
-    font-size: var(--text-note);
-    color: var(--color-text-3);
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 28px;
   }
-  @media (min-width: 481px) {
-    img {
-      height: 310px;
-    }
+  .gallery img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
   }
-  @media (min-width: 960px) {
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 1.6fr;
-      gap: 24px;
-      align-items: start;
-      margin-top: 26px;
+  @media (max-width: 1000px) {
+    .profile {
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
     .stats {
-      grid-template-columns: 1fr;
-      margin-top: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
-    figure {
-      margin-top: 0;
+    .stats div + div {
+      border-top-width: 2px;
+      border-top-color: var(--color-navy);
     }
-    img {
-      height: 360px;
+  }
+  @media (max-width: 760px) {
+    dd {
+      font-size: 1.75rem;
+    }
+    .main img {
+      height: 260px;
+    }
+    .gallery {
+      gap: 12px;
+    }
+    .gallery img {
+      height: 180px;
     }
   }
 </style>

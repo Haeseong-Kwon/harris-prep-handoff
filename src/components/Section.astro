@@ -1,25 +1,22 @@
 ---
-// 구간 래퍼. 흰 배경·연한 중립 배경·틴트·남색 강조 구간으로 흐름을 구분한다.
+// 본문 구간. 흰 면 / 옅은 하늘 면 / 남색 면. 구간 사이는 구분선으로 나눈다.
 interface Props {
   id?: string;
-  tone?: 'white' | 'muted' | 'tint' | 'dark';
-  kicker: string;
+  tone?: 'white' | 'soft' | 'dark';
+  eyebrow: string;
   title: string[];
   copy?: string[];
-  align?: 'center' | 'start';
 }
 
-const { id, tone = 'white', kicker, title, copy, align = 'center' } = Astro.props;
+const { id, tone = 'white', eyebrow, title, copy } = Astro.props;
 const headingId = id ? `${id}-title` : undefined;
 ---
 
 <section id={id} class:list={['section', `section--${tone}`]} aria-labelledby={headingId}>
   <div class="container">
-    <header class:list={['head', `head--${align}`]}>
-      <p class="kicker">{kicker}</p>
-      <h2 id={headingId}>{title.map((line, i) => (<>{i > 0 && <br />}{line}</>))}</h2>
-      {copy && <p class="copy">{copy.map((line, i) => (<>{i > 0 && <br />}{line}</>))}</p>}
-    </header>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id={headingId}>{title.map((line, i) => (<>{i > 0 && <br />}{line}</>))}</h2>
+    {copy && <p class="copy">{copy.map((line, i) => (<>{i > 0 && <br />}{line}</>))}</p>}
     <slot />
   </div>
 </section>
@@ -27,48 +24,31 @@ const headingId = id ? `${id}-title` : undefined;
 <style>
   .section {
     padding-block: var(--section-y);
+    border-bottom: 1px solid var(--color-line);
   }
-  .section--muted {
-    background: var(--color-muted);
-  }
-  .section--tint {
-    background: var(--color-tint);
+  .section--soft {
+    background: var(--color-soft);
   }
   .section--dark {
-    background: var(--color-dark-surface);
-    color: #fff;
-  }
-  .head--center {
-    text-align: center;
-  }
-  .head--center .copy {
-    margin-inline: auto;
-  }
-  .kicker {
-    margin-bottom: 22px;
-    font-size: var(--text-micro);
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: var(--color-accent);
-  }
-  .section--dark .kicker {
-    color: var(--color-dark-text-2);
-  }
-  h2 {
-    font-size: var(--text-h2);
-    line-height: 1.35;
-    letter-spacing: -1.4px;
-  }
-  .section--dark h2 {
-    font-size: var(--text-h2-dark);
+    background: var(--color-navy);
+    color: var(--color-on-dark);
+    border-bottom: 0;
   }
   .copy {
-    max-width: var(--text-max);
-    margin-top: 18px;
-    line-height: 1.85;
-    color: var(--color-text-2);
+    max-width: 720px;
+    margin-top: 22px;
+    color: var(--color-muted);
   }
-  .section--dark .copy {
-    color: var(--color-dark-text-2);
+  .section--dark .eyebrow,
+  .section--dark :global(.note) {
+    color: var(--color-sky);
+  }
+  .section--dark .copy,
+  .section--dark :global(.pending summary),
+  .section--dark :global(.pending p) {
+    color: var(--color-on-dark-muted);
+  }
+  .section--dark :global(.pending p) {
+    border-color: var(--color-on-dark-line);
   }
 </style>

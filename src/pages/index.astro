@@ -1,33 +1,16 @@
 ---
-import CareSystem from '../components/CareSystem.astro';
-import CohortRecord from '../components/CohortRecord.astro';
-import ConcernDiagnosis from '../components/ConcernDiagnosis.astro';
-import Consultation from '../components/Consultation.astro';
-import FAQAccordion from '../components/FAQAccordion.astro';
-import Hero from '../components/Hero.astro';
-import JourneyTimeline from '../components/JourneyTimeline.astro';
-import LocalPartner from '../components/LocalPartner.astro';
-import PaymentStructure from '../components/PaymentStructure.astro';
-import ProgramComparison from '../components/ProgramComparison.astro';
-import RepresentativeProfile from '../components/RepresentativeProfile.astro';
-import SchoolProfile from '../components/SchoolProfile.astro';
+import BrandTeaser from '../components/BrandTeaser.astro';
+import ExploreLinks from '../components/ExploreLinks.astro';
+import HomeHero from '../components/HomeHero.astro';
+import PageCta from '../components/PageCta.astro';
+import SchoolTeaser from '../components/SchoolTeaser.astro';
 import Base from '../layouts/Base.astro';
 ---
 
-<Base
-  title="HARRIS PREP"
-  description="호주 퀸즐랜드 사립학교 정규 수업에 학교 텀 기준 최대 10주 동안 함께하는 초등 4~6학년 단기유학 과정. 부모 동행 없이, 현지 상주 코칭과 주간 리포트로 함께합니다."
->
-  <Hero />
-  <ConcernDiagnosis />
-  <ProgramComparison />
-  <JourneyTimeline />
-  <SchoolProfile />
-  <CareSystem />
-  <RepresentativeProfile />
-  <CohortRecord />
-  <LocalPartner />
-  <PaymentStructure />
-  <FAQAccordion />
-  <Consultation />
+<Base title="홈">
+  <HomeHero />
+  <ExploreLinks />
+  <SchoolTeaser />
+  <BrandTeaser />
+  <PageCta />
 </Base>

@@ -1,0 +1,62 @@
+---
+// 홈 학교 소개: 사진 / 설명 2열.
+---
+
+<section class="teaser" aria-labelledby="school-teaser-title">
+  <div class="inner">
+    <figure>
+      <img src="/assets/ipswich-school.jpg" width="1000" height="750" loading="lazy" alt="입스위치 그래머 스쿨 외관, 2016년 자료 사진" />
+      <figcaption class="caption">학교 외관 자료 사진 · 2016 · Shiftchange / CC0</figcaption>
+    </figure>
+    <div class="text">
+      <p class="eyebrow">IPSWICH GRAMMAR SCHOOL</p>
+      <h2 id="school-teaser-title">학교의 하루에<br />함께합니다.</h2>
+      <p class="body">1863년 설립. 호주 퀸즐랜드주.<br />현지 학생과 같은 교복, 시간표, 과제로<br />학교 정규 수업에 참여합니다.</p>
+      <a class="text-link" href="/school">학교 자세히 보기 <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .teaser {
+    background: var(--color-soft);
+  }
+  .inner {
+    max-width: calc(var(--main-max) + var(--gutter) * 2);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 45px;
+    align-items: center;
+  }
+  img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+  .caption {
+    padding-inline: 18px;
+  }
+  .text {
+    padding: 35px var(--gutter) 35px 0;
+  }
+  .body {
+    margin-top: 22px;
+    color: var(--color-muted);
+  }
+  .text-link {
+    margin-top: 18px;
+  }
+  @media (max-width: 760px) {
+    .inner {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    img {
+      height: 260px;
+    }
+    .text {
+      padding: 20px var(--gutter) 44px;
+    }
+  }
+</style>

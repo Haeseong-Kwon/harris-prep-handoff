@@ -1,10 +1,10 @@
 ---
-// 03 비교. 좁은 화면에서는 표 영역만 가로 스크롤(키보드로도 스크롤 가능).
+// ComparisonTable: 의미론적 table. 좁은 화면에서는 이 컴포넌트만 가로 스크롤.
 import { comparison } from '../data/site';
 import Section from './Section.astro';
 ---
 
-<Section id="compare" tone="muted" kicker="03 / THE DIFFERENCE" title={['활동 일정이 아닌,', '학교 시간표를 따릅니다.']}>
+<Section id="compare" eyebrow="THE DIFFERENCE" title={['활동 일정이 아닌,', '학교 시간표를 따릅니다.']}>
   <div class="scroll" role="region" aria-labelledby="compare-caption" tabindex="0">
     <table>
       <caption id="compare-caption" class="sr-only">일반 영어캠프·단기 어학연수·HARRIS PREP 비교</caption>
@@ -25,50 +25,57 @@ import Section from './Section.astro';
     </table>
   </div>
   <p class="note">{comparison.footnote}</p>
+  <p class="hint" aria-hidden="true">← 표를 옆으로 밀어 비교해 보세요 →</p>
 </Section>
 
 <style>
   .scroll {
-    margin-top: 26px;
+    margin-top: 32px;
     overflow-x: auto;
-    border-radius: 15px;
-    background: var(--color-surface);
-    box-shadow: var(--shadow-card);
   }
   table {
     width: 100%;
-    min-width: 510px;
+    min-width: 680px;
     border-collapse: collapse;
-    font-size: var(--text-note);
+    font-size: var(--text-ui);
   }
   th,
   td {
-    padding: 15px 12px;
+    padding: 20px 16px;
     text-align: left;
     vertical-align: top;
-    border-bottom: 1px solid #d1d8df;
+    border-bottom: 1px solid var(--color-line);
   }
   thead th {
+    background: var(--color-soft);
     font-weight: 600;
   }
   tbody th {
-    font-weight: 500;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  td {
+    color: var(--color-muted);
   }
   tr > :last-child {
-    background: var(--color-tint);
+    background: var(--color-soft-strong);
+    color: var(--color-navy);
     font-weight: 600;
   }
   thead tr > :last-child {
-    background: var(--color-accent);
-    color: var(--color-on-accent);
+    background: var(--color-navy);
+    color: var(--color-on-dark);
+    letter-spacing: 0.04em;
   }
-  @media (min-width: 769px) {
-    table {
-      font-size: 0.875rem;
-    }
-    th,
-    td {
-      padding: 18px 16px;
+  .hint {
+    display: none;
+    margin-top: 8px;
+    font-size: var(--text-meta);
+    color: var(--color-muted);
+  }
+  @media (max-width: 760px) {
+    .hint {
+      display: block;
     }
   }
 </style>

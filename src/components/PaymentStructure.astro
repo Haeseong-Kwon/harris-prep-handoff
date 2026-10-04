@@ -1,66 +1,76 @@
 ---
-// 10 비용. 3,900만 원은 예정 금액 — 확정처럼 표기하지 않는다.
+// 비용. 3,900만 원은 예정 금액 — 확정처럼 표기하지 않는다.
 import { payment } from '../data/site';
 import Section from './Section.astro';
 ---
 
-<Section id="cost" tone="tint" kicker="10 / COST & PAYMENT" title={['큰 결정일수록,', '비용부터 펼쳐놓겠습니다.']}>
-  <p class="price">{payment.price} <small>(예정)</small></p>
-  <p class="note center">{payment.priceNote[0]}<br />{payment.priceNote[1]}</p>
-  <dl class="list">
-    {payment.rows.map(([label, value]) => (
-      <div><dt>{label}</dt><dd>{value}</dd></div>
-    ))}
-  </dl>
-  <div class="actions actions--center">
-    <a class="btn" href="#consult">납부 구조 상담 ↗</a>
+<Section id="cost" eyebrow="COST & PAYMENT" title={['큰 결정일수록,', '비용부터 펼쳐놓겠습니다.']}>
+  <div class="layout">
+    <div>
+      <p class="price">{payment.price} <small>(예정)</small></p>
+      <p class="note">{payment.priceNote[0]}<br />{payment.priceNote[1]}</p>
+      <div class="actions">
+        <a class="btn" href="/contact">납부 구조 상담 <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <dl class="list">
+      {payment.rows.map(([label, value]) => (
+        <div><dt>{label}</dt><dd class:list={{ waiting: value.startsWith('[') }}>{value}</dd></div>
+      ))}
+    </dl>
   </div>
 </Section>
 
 <style>
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 60px;
+    align-items: start;
+    margin-top: 32px;
+  }
   .price {
-    margin-top: 22px;
-    font-size: var(--text-price);
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.5rem);
     font-weight: 700;
-    letter-spacing: -2px;
-    color: var(--color-accent);
-    text-align: center;
+    letter-spacing: -0.04em;
   }
   small {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 1.1rem;
+    font-weight: 400;
     letter-spacing: 0;
-    color: var(--color-text-2);
+    color: var(--color-muted);
   }
   .list {
-    max-width: 640px;
-    margin: 20px auto 0;
-    padding: 10px 17px;
-    border-radius: var(--radius-photo);
-    background: var(--color-surface);
+    border-top: 2px solid var(--color-navy);
   }
   .list div {
     display: flex;
     justify-content: space-between;
-    gap: 18px;
-    padding: 15px 0;
-    font-size: var(--text-note);
-    border-bottom: 1px solid var(--color-border);
+    gap: 25px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--color-line);
   }
-  .list div:last-child {
-    border-bottom: 0;
+  dt {
+    color: var(--color-muted);
   }
   dd {
-    margin: 0;
     font-weight: 600;
     text-align: right;
   }
-  @media (min-width: 481px) {
-    .list {
-      padding: 12px 23px;
+  .waiting {
+    font-weight: 400;
+    color: var(--color-muted);
+  }
+  @media (max-width: 1000px) {
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 32px;
     }
+  }
+  @media (max-width: 760px) {
     .list div {
-      font-size: 0.875rem;
+      gap: 15px;
+      font-size: var(--text-ui);
     }
   }
 </style>

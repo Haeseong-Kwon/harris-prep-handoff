@@ -1,0 +1,111 @@
+---
+import { brand, contact, nav, photoCredits } from '../data/site';
+---
+
+<footer class="site-footer">
+  <div class="container grid">
+    <div>
+      <p class="name">{brand.name}</p>
+      <p>{brand.parent}</p>
+      <p>운영 주체 {brand.operator}</p>
+    </div>
+    <div>
+      <p class="label">상담</p>
+      <p>상담 담당 {contact.manager}</p>
+      <p><a href={contact.phoneHref}>{contact.phoneDisplay}</a></p>
+      <p><a href={`mailto:${contact.email}`}>{contact.email}</a></p>
+    </div>
+    <nav aria-label="하단 메뉴">
+      <p class="label">안내</p>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        <li><a href="/contact">상담 예약</a></li>
+        <li><a href="/privacy">개인정보 처리방침</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container legal">
+    <p>[자료 대기: 사업자 표기·개인정보 처리방침] 운영 법인은 공개 전 확인이 필요합니다.</p>
+    <p>학교생활 사진: 협업사 공개 참고 자료. HARRIS PREP 1기 활동 사진이 아닙니다.</p>
+    <p class="credits">
+      사진 출처 —{' '}
+      {photoCredits.map((c, i) => (
+        <>
+          {i > 0 && ' · '}
+          {c.label}: {c.credit} (<a href={c.source} target="_blank" rel="noopener">원본<span class="sr-only"> 새 창</span></a>)
+        </>
+      ))}
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: 56px 40px;
+    background: var(--color-navy-deep);
+    color: var(--color-on-dark-muted);
+    font-size: var(--text-ui);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 40px;
+  }
+  .name {
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-on-dark);
+  }
+  .label {
+    margin-bottom: 8px;
+    font-size: var(--text-meta);
+    font-weight: 700;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--color-sky);
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+  }
+  a:hover {
+    color: var(--color-on-dark);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .legal {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid #1d324a;
+    font-size: var(--text-meta);
+  }
+  .legal p + p {
+    margin-top: 4px;
+  }
+  .credits a {
+    min-height: 0;
+    text-decoration: underline;
+  }
+  @media (max-width: 760px) {
+    .site-footer {
+      padding-block: 40px 32px;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    a {
+      min-height: var(--touch-min);
+    }
+  }
+</style>

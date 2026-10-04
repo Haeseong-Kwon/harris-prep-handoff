@@ -1,73 +1,74 @@
 /*
- * HARRIS PREP 디자인 토큰.
- * 출처: docs/handoff/SPEC.md + docs/handoff/styles.css 최종 레이어.
- * 기본색은 톡픽 #0C2340, 포인트는 #2463EB 하나만 사용한다.
+ * HARRIS PREP 디자인 토큰 — 톡픽 패밀리 라이트 테마.
+ * 출처: docs/handoff-website/DEVELOPER-SPEC.md "디자인 토큰" + styles.css.
+ * 면은 흰색·남색·옅은 하늘색. 카드 반복보다 구분선과 여백으로 계층을 만든다.
  */
 :root {
   /* 색 */
   --color-navy: #0c2340;
-  --color-accent: #2463eb;
-  --color-accent-hover: #1d55d4;
-  --color-on-accent: #fff;
+  --color-navy-deep: #07182b; /* 푸터 */
+  --color-sky: #b8d4e8; /* 포인트 하늘색 */
+  --color-sky-strong: #466d8a; /* 흰 바탕 위 강조 글자 (대비 5:1+) */
+  --color-soft: #edf4f8; /* 파생 면 */
+  --color-soft-strong: #dfeef7; /* 비교표 강조 열 */
+  --color-line: #dce5eb;
+  --color-line-strong: #c6d6e2;
   --color-surface: #fff;
-  --color-muted: #f3f6fa;
-  --color-subtle: #f5f7fa;
-  --color-tint: #edf3ff;
-  --color-placeholder: #e2e8f0;
-  --color-field: #f4f6f9;
+  --color-field: #f7fafc;
   --color-text: var(--color-navy);
-  --color-text-2: #5b6d82;
-  --color-text-3: #55677c; /* 연한 배경(#edf3ff) 위에서도 4.5:1 이상 */
-  --color-border: #e1e7ef;
-  --color-border-strong: #cbd4df;
-  --color-error: #c62828;
+  --color-muted: #506477;
+  --color-error: #b3261e;
+  --color-focus: #6288a4;
 
-  --color-dark-surface: var(--color-navy);
-  --color-dark-card: #19344f;
-  --color-dark-border: #3c526c;
-  --color-dark-text-2: #c4d3eb;
-  --color-dark-accent: #b4ccf7;
+  --color-on-dark: #fff;
+  --color-on-dark-muted: #d5e1ea;
+  --color-on-dark-line: #3a5068;
 
   /* 서체 */
   --font-sans: 'Pretendard', 'Pretendard Variable', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
-    'Noto Sans KR', Arial, sans-serif;
-  --text-h1: clamp(2.1875rem, 1.6rem + 2.2vw, 3rem); /* 35 → 48 */
-  --text-h2: clamp(1.625rem, 1.35rem + 1.1vw, 1.9375rem); /* 26 → 31 */
-  --text-h2-dark: clamp(1.6875rem, 1.4rem + 1.2vw, 2.0625rem); /* 27 → 33 */
-  --text-h3: 1.125rem;
-  --text-body: 0.9375rem; /* 15 */
-  --text-small: 0.8125rem; /* 13 */
-  --text-note: 0.75rem; /* 12 */
-  --text-micro: 0.6875rem; /* 11, 최소 */
-  --text-price: clamp(2.5rem, 2rem + 2vw, 3rem);
-  --text-stat: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);
-  --tracking-tight: -0.3px;
+    'Malgun Gothic', Arial, sans-serif;
+  --text-h1: clamp(2.1rem, 1.4rem + 3.2vw, 4rem);
+  --text-h1-page: clamp(2rem, 1.5rem + 2.4vw, 3.4rem);
+  --text-h2: clamp(1.65rem, 1.25rem + 1.7vw, 2.7rem);
+  --text-h3: 1.25rem;
+  --text-body: 1rem;
+  --text-ui: 0.875rem; /* 상시 메뉴·필드 레이블 */
+  --text-meta: 0.75rem; /* 출처·메타 */
+  --leading-body: 1.75;
+  --leading-h1: 1.24;
+  --leading-h2: 1.38;
+  --tracking-h1: -0.055em;
+  --tracking-h2: -0.045em;
+  --tracking-eyebrow: 0.14em;
 
-  /* 간격·크기 */
-  --gutter: clamp(1.375rem, 0.9rem + 2vw, 2rem);
-  --section-y: clamp(2.4375rem, 1.8rem + 2.6vw, 4.5rem);
-  --content-max: 1080px;
-  --text-max: 560px;
+  /* 레이아웃 */
+  --main-max: 1200px;
+  --header-max: 1280px;
+  --gutter: 40px;
+  --section-y: 96px;
   --touch-min: 44px;
-  --header-h: 126px; /* sticky 헤더 실측 높이. 앵커 scroll-padding에 사용 */
-  --bottom-bar-h: 76px;
+  --header-h: 84px; /* sticky 헤더 높이. 앵커 scroll-padding에 사용 */
 
-  /* 라운드 */
-  --radius-photo: 18px;
-  --radius-card: 16px;
-  --radius-step: 14px;
-  --radius-button: 12px;
-  --radius-field: 10px;
-  --radius-pill: 999px;
+  /* 라운드·그림자: 절제된 톤 */
+  --radius-ui: 4px;
+  --radius-tile: 6px;
+  --shadow-header: 0 1px 0 var(--color-line), 0 8px 24px #0c234008;
 
-  /* 그림자 */
-  --shadow-card: 0 6px 25px #0c234008;
-  --shadow-photo: 0 15px 35px #0c234015;
-  --shadow-float: 0 5px 20px #0c234010;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration: 180ms;
 }
 
-@media (min-width: 900px) {
+@media (max-width: 1000px) {
   :root {
-    --header-h: 92px;
+    --section-y: 72px;
+    --header-h: 76px;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --gutter: 25px;
+    --section-y: 52px;
+    --header-h: 72px;
   }
 }

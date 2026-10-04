@@ -1,11 +1,11 @@
 ---
-import PageIntro from '../components/PageIntro.astro';
+import PageTitle from '../components/PageTitle.astro';
 import { brand, contact } from '../data/site';
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="개인정보 처리방침" description="HARRIS PREP 상담 신청 개인정보 처리방침." hasConsult={false}>
-  <PageIntro kicker="PRIVACY" title={['개인정보 처리방침']} copy={`운영 주체 ${brand.operator}`} />
+<Base title="개인정보 처리방침" description="HARRIS PREP 상담 신청 개인정보 처리방침.">
+  <PageTitle eyebrow="PRIVACY" title="개인정보 처리방침" lead={`운영 주체 ${brand.operator} · 운영 법인은 공개 전 확인이 필요합니다.`} />
   <section class="container body">
     <p class="notice">정책 전문이 확정되기 전입니다. 확정 전까지 상담 신청 정보는 접수되지 않습니다.</p>
     <dl>
@@ -28,25 +28,26 @@ import Base from '../layouts/Base.astro';
   }
   .notice {
     padding: 16px 18px;
-    border-radius: var(--radius-button);
-    background: var(--color-tint);
-    font-size: var(--text-small);
+    border-left: 3px solid var(--color-navy);
+    background: var(--color-soft);
+    font-size: var(--text-ui);
   }
   dl {
     margin: 24px 0 0;
   }
   dl div {
     padding: 16px 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-line);
   }
   dt {
     font-weight: 600;
   }
   dd {
-    margin: 4px 0 0;
-    color: var(--color-text-2);
+    margin-top: 4px;
+    color: var(--color-muted);
   }
   a {
-    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 </style>

@@ -1,0 +1,83 @@
+---
+// ExploreLinks: 실제 문서 링크 3개, 항목 전체가 클릭 영역.
+const items = [
+  { href: '/program', title: '10주 과정', body: '준비부터 귀국까지, 전체 흐름을 봅니다.' },
+  { href: '/school', title: '함께할 학교', body: '입스위치 그래머 스쿨을 소개합니다.' },
+  { href: '/care', title: '현지 케어', body: '코칭과 소식 전달의 범위를 확인합니다.' },
+];
+---
+
+<section class="explore" aria-labelledby="explore-title">
+  <div class="container">
+    <p class="eyebrow">EXPLORE HARRIS PREP</p>
+    <h2 id="explore-title">아이의 학교생활,<br />필요한 정보부터 살펴보세요.</h2>
+    <ul>
+      {items.map((item, i) => (
+        <li>
+          <a href={item.href}>
+            <span class="no">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+            <span class="text-link">자세히 보기 <span class="arrow" aria-hidden="true">→</span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .explore {
+    padding-block: 90px;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  a {
+    display: block;
+    height: 100%;
+    padding: 23px 0;
+    border-top: 2px solid var(--color-navy);
+    transition: border-color var(--duration) var(--ease);
+  }
+  a:hover {
+    border-color: var(--color-sky-strong);
+  }
+  .no {
+    font-size: var(--text-meta);
+    color: var(--color-muted);
+  }
+  h3 {
+    margin: 18px 0 12px;
+    font-size: 1.7rem;
+    letter-spacing: -0.04em;
+  }
+  p {
+    color: var(--color-muted);
+  }
+  .text-link {
+    margin-top: 14px;
+  }
+  @media (max-width: 760px) {
+    .explore {
+      padding-block: 50px;
+    }
+    ul {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    a {
+      padding: 20px 0 12px;
+    }
+    h3 {
+      margin-top: 8px;
+      font-size: 1.6rem;
+    }
+  }
+</style>

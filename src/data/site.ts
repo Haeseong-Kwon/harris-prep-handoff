@@ -1,5 +1,5 @@
-// 사이트 카피와 운영 정보. 출처: docs/handoff/COPY.md, SPEC.md.
-// [자료 대기] 표기는 확정 전까지 거짓 정보로 대체하지 않는다 (docs/handoff/CONTENT-CHECKLIST.md).
+// 사이트 카피와 운영 정보. 출처: docs/handoff-website/COPY.md, DEVELOPER-SPEC.md.
+// [자료 대기] 표기는 확정 전까지 거짓 정보로 대체하지 않는다 (docs/handoff-website/CONTENT-CHECKLIST.md).
 
 export const brand = {
   name: 'HARRIS PREP',
@@ -15,10 +15,11 @@ export const contact = {
 } as const;
 
 export const nav = [
-  { href: '/program', label: '과정 안내' },
-  { href: '/care', label: '돌봄·운영' },
-  { href: '/cost', label: '비용' },
-  { href: '/faq', label: 'FAQ' },
+  { href: '/program', label: '프로그램' },
+  { href: '/school', label: '학교' },
+  { href: '/care', label: '현지 케어' },
+  { href: '/about', label: '브랜드 소개' },
+  { href: '/guide', label: '비용·FAQ' },
 ] as const;
 
 export interface Concern {
@@ -33,28 +34,28 @@ export const concerns: Concern[] = [
     id: 0,
     lines: ['학원은 다니는데,', '말할 때는 멈춰요.'],
     answer:
-      '학교 수업과 과제, 또래와의 생활 속에서 영어를 사용하는 환경에 참여합니다. 말하기 변화의 정도는 학생마다 다르므로 현재 수준과 적응 준비도를 먼저 상담합니다.',
+      '학교 수업과 또래와의 생활 속에서 영어를 사용합니다. 변화의 정도는 학생마다 다르므로 현재 수준과 적응 준비도를 먼저 상담합니다.',
     cta: '현재 영어 수준부터 상담하기',
   },
   {
     id: 1,
     lines: ['해외 경험은 주고 싶은데,', '부모가 함께 갈 수 없어요.'],
     answer:
-      '부모 동행 없이 현지 상주 코칭과 주간 리포트를 제공합니다. 숙소·야간 돌봄·긴급 연락의 구체적 범위는 자료 확인 후 안내하며, 신청 전에 함께 검토합니다.',
+      '부모 동행 없이 현지 상주 코칭과 주간 리포트를 제공합니다. 숙소·야간 돌봄·긴급 연락 범위는 확인 후 안내하며 신청 전에 함께 검토합니다.',
     cta: '현지 돌봄 범위 확인하기',
   },
   {
     id: 2,
     lines: ['캠프 이후,', '무엇이 남았는지 모르겠어요.'],
     answer:
-      '별도 활동을 체험하는 데서 나아가 현지 학생과 같은 교복·시간표·과제로 정규 수업에 참여합니다. 주간 리포트로 학교생활을 공유하며, 귀국 후 성과는 증빙 확보 후 공개할 예정입니다.',
+      '현지 학생과 같은 교복·시간표·과제로 정규 수업에 참여합니다. 주간 리포트로 학교생활을 공유하며, 귀국 후 성과는 증빙 확보 후 공개합니다.',
     cta: '정규 수업 과정 상담하기',
   },
   {
     id: 3,
     lines: ['진학 준비와 해외 경험,', '지금이 맞는 때일까요?'],
     answer:
-      '진학 목표와 재학 중인 학교의 일정, 자녀의 적응 준비도를 함께 고려해야 합니다. 특정 학교 합격이나 입시 성과를 약속하지 않으며, 참가 시기가 적절한지 상담합니다.',
+      '진학 목표와 재학 중인 학교의 일정, 적응 준비도를 함께 고려합니다. 특정 학교 합격이나 입시 성과를 약속하지 않으며 참가 시기를 상담합니다.',
     cta: '참가 시기 상담하기',
   },
 ];
@@ -128,70 +129,67 @@ export const payment = {
   ],
 } as const;
 
-export type FaqTopic = 'care' | 'eligibility' | 'school' | 'visa' | 'cost' | 'refund' | 'selection' | 'safety';
-
 export interface Faq {
-  topic: FaqTopic;
   q: string;
   a: string;
 }
 
 export const faqs: Faq[] = [
   {
-    topic: 'care',
     q: '부모가 함께 가지 않아도 진행할 수 있나요?',
     a: '부모 동행 없이 진행하며 현지 상주 코칭과 주간 리포트를 제공합니다. [자료 대기: 숙소·야간 돌봄·담당자·연락 체계] 구체적인 운영 범위를 상담에서 확인해 주세요.',
   },
   {
-    topic: 'eligibility',
     q: '영어를 거의 못 해도 참가할 수 있나요?',
     a: '소수 선발제로 운영합니다. [자료 대기: 영어 수준·적응 준비도·지원 조건] 현재 정보만으로 참가 가능 여부를 판단할 수 없으며 선발 인터뷰에서 확인해야 합니다.',
   },
   {
-    topic: 'school',
     q: '한국 학교 출결은 어떻게 처리하나요?',
     a: '[자료 대기: 출결 관련 안내 자료·제공 서류] 출국 전 재학 중인 학교에 기간·제출 서류·출결 처리 가능 여부를 직접 확인해야 합니다.',
   },
   {
-    topic: 'visa',
     q: '비자는 어떻게 준비하나요?',
     a: '[자료 대기: 참가 조건별 비자 유형·신청 주체·준비 안내 범위] 체류 목적과 기간에 맞는 최신 요건을 확인한 뒤 안내합니다.',
   },
   {
-    topic: 'cost',
     q: '총 비용과 추가 비용은 얼마인가요?',
     a: '예정 총액은 3,900만 원이며 최종 금액은 상담 시 안내합니다. 예약금은 350만 원, 학비는 분할납부가 가능합니다. 마스터클래스와 항공료는 별도입니다. [자료 대기: 예약금 포함 여부·숙소·식사·보험·비자 등 세부 비용표]',
   },
   {
-    topic: 'refund',
     q: '취소하거나 환불받으려면 어떻게 하나요?',
     a: '[자료 대기: 예약금·학비·출국 전후 취소 및 환불 규정] 환불 가능 금액이나 기한은 현재 확정해 안내할 수 없습니다. 신청·납부 전에 서면 규정을 확인해야 합니다.',
   },
   {
-    topic: 'selection',
     q: '선발 기준은 무엇이며, 탈락하면 어떻게 되나요?',
     a: '[자료 대기: 대상 학년·성별·영어 수준·면접 기준·결과 안내·탈락 시 예약금 처리] 선발 전에 기준과 납부 시점을 안내할 수 있도록 준비 중입니다.',
   },
   {
-    topic: 'safety',
     q: '안전·의료 문제는 어떻게 대응하나요?',
     a: '[자료 대기: 의료기관 연계·보험·응급 대응·비상 연락·보호자 동의 절차] 운영 체계가 확인되기 전 구체적인 대응을 약속하는 문구는 사용하지 않습니다.',
   },
 ];
 
+export const partner = {
+  name: 'J&C International Holdings',
+  logo: '/assets/jc-partner-logo.png',
+  body: [
+    '브리즈번에서 19년간 정착 서비스를 운영해 온 현지 협업 파트너입니다.',
+    '렌트·공항픽업·차량·은행 등 생활·행정 분야의 지원 경험을 갖추고 있습니다.',
+  ],
+  role: '역할: 호주 현지 정착·생활 지원',
+  pending: '[자료 대기: 본 프로그램의 포함 지원 항목·담당 범위·협약 확인본]',
+} as const;
+
+// 출처: docs/handoff-website/assets/credits.json. 협업사 사진은 사용 허락 기준이며 공개 라이선스가 아니다.
 export const photoCredits = [
   {
-    label: '학교',
-    author: 'Shiftchange',
-    year: 2016,
-    license: 'CC0',
+    label: '학교 외관',
+    credit: 'Shiftchange · 2016 · CC0',
     source: 'https://commons.wikimedia.org/wiki/File:Ipswich_Grammar_School_at_Woodend,_Queensland.jpg',
   },
   {
-    label: '브리즈번',
-    author: 'Dinkum',
-    year: 2008,
-    license: 'CC0',
-    source: 'https://commons.wikimedia.org/wiki/File:Brisbane_skyline.JPG',
+    label: '학교생활 사진 2점',
+    credit: '협업사 공개 자료 · 사용 허락 (2026-10-01)',
+    source: 'https://jcint.com.au/1136-2/',
   },
 ] as const;

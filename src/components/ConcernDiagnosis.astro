@@ -1,20 +1,22 @@
 ---
-// 02 고민 진단. 단일 선택 → 답변 1개 + 맞춤 CTA. 선택만으로 접수·외부 요청 없음.
+// ConcernDiagnosis: 4개 고민 단일 선택 → 답변 + 맞춤 상담 링크(/contact?concern=n).
+// 선택만으로 접수·외부 요청이 일어나지 않는다.
 import { concerns } from '../data/site';
 import Section from './Section.astro';
 ---
 
 <Section
   id="diagnosis"
-  kicker="02 / YOUR CHILD, YOUR QUESTION"
+  eyebrow="YOUR CHILD, YOUR QUESTION"
   title={['우리 아이 영어,', '어디에서 멈춰 있나요?']}
   copy={['우리 아이에게 맞는 과정인지, 고민부터 짚어보세요.']}
 >
-  <div class="diagnosis" data-diagnosis>
-    <div class="cards" role="group" aria-label="자녀 영어 고민 선택">
+  <div data-diagnosis>
+    <div class="tiles" role="group" aria-label="자녀 영어 고민 선택">
       {concerns.map((c) => (
-        <button type="button" class="card-btn" data-concern={c.id} aria-pressed="false">
-          {c.lines[0]}<br />{c.lines[1]}
+        <button type="button" class="tile" data-concern={c.id} aria-pressed="false">
+          <span class="no" aria-hidden="true">Q{c.id + 1}</span>
+          <span>{c.lines[0]}<br />{c.lines[1]}</span>
         </button>
       ))}
     </div>
@@ -22,7 +24,7 @@ import Section from './Section.astro';
       <div class="answer" data-answer hidden>
         <p data-answer-text></p>
         <div class="actions">
-          <a class="btn" href="#consult" data-fit-cta>우리 아이 과정 상담</a>
+          <a class="btn" href="/contact" data-fit-cta>우리 아이 과정 상담</a>
         </div>
       </div>
     </div>
@@ -31,15 +33,13 @@ import Section from './Section.astro';
 
 <script>
   import { concerns } from '../data/site';
-  import { nextConcernMessage } from '../lib/consult';
 
   const root = document.querySelector<HTMLElement>('[data-diagnosis]');
   if (root) {
     const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-concern]')];
     const answer = root.querySelector<HTMLElement>('[data-answer]')!;
     const answerText = root.querySelector<HTMLElement>('[data-answer-text]')!;
-    const cta = root.querySelector<HTMLElement>('[data-fit-cta]')!;
-    let lastAutofill: string | null = null;
+    const cta = root.querySelector<HTMLAnchorElement>('[data-fit-cta]')!;
 
     buttons.forEach((button) =>
       button.addEventListener('click', () => {
@@ -48,88 +48,72 @@ import Section from './Section.astro';
         answer.hidden = false;
         answerText.textContent = concern.answer;
         cta.textContent = concern.cta;
-
-        const field = document.querySelector<HTMLTextAreaElement>('#consult-message');
-        if (!field) return;
-        const next = nextConcernMessage(field.value, lastAutofill, concern.lines.join(' '));
-        if (next !== null) {
-          field.value = next;
-          lastAutofill = next;
-        }
+        cta.href = `/contact?concern=${concern.id}`;
       }),
     );
   }
 </script>
 
 <style>
-  .cards {
+  .tiles {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 26px;
+    gap: 16px;
+    margin-top: 32px;
   }
-  .card-btn {
-    position: relative;
-    min-height: 115px;
-    padding: 17px 29px 17px 14px;
-    border: 1px solid transparent;
-    border-radius: var(--radius-card);
-    background: var(--color-subtle);
-    color: var(--color-text);
-    font-size: var(--text-small);
-    font-weight: 500;
+  .tile {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    min-height: 95px;
+    padding: 25px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-tile);
+    background: var(--color-soft);
+    color: var(--color-navy);
     text-align: left;
     cursor: pointer;
+    transition:
+      background-color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
   }
-  .card-btn::after {
-    content: '+';
-    position: absolute;
-    top: 15px;
-    right: 14px;
-    font-size: 22px;
-    line-height: 1;
-    color: var(--color-accent);
+  .tile:hover {
+    border-color: var(--color-sky-strong);
   }
-  .card-btn:hover {
-    border-color: var(--color-border-strong);
+  .tile[aria-pressed='true'] {
+    background: var(--color-sky);
+    border-color: var(--color-navy);
   }
-  .card-btn[aria-pressed='true'] {
-    background: var(--color-tint);
-    border-color: var(--color-accent);
+  .no {
+    font-size: var(--text-meta);
+    font-weight: 700;
+    color: var(--color-sky-strong);
+    line-height: 2.2;
   }
-  .card-btn[aria-pressed='true']::after {
-    content: '✓';
-    font-size: 18px;
+  .tile[aria-pressed='true'] .no {
+    color: var(--color-navy);
   }
   .answer {
-    margin-top: 15px;
-    padding: 24px;
-    border-radius: var(--radius-card);
-    background: var(--color-tint);
+    margin-top: 18px;
+    padding: 25px 28px;
+    background: var(--color-soft);
+    border-left: 3px solid var(--color-navy);
   }
   .answer .actions {
     margin-top: 20px;
   }
-  @media (min-width: 481px) {
-    .cards {
+  @media (max-width: 760px) {
+    .tiles {
       gap: 12px;
     }
-    .card-btn {
-      padding: 20px 35px 20px 18px;
-      font-size: 0.875rem;
+    .tile {
+      flex-direction: column;
+      gap: 4px;
+      padding: 18px;
+      font-size: var(--text-ui);
     }
-  }
-  @media (min-width: 960px) {
-    .cards {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .answer {
-      max-width: 760px;
-      margin-inline: auto;
-      text-align: center;
-    }
-    .answer .actions {
-      justify-content: center;
+    .no {
+      line-height: 1.5;
     }
   }
 </style>

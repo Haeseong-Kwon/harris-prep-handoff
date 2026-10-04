@@ -1,18 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-const PAGES = ['/', '/program', '/care', '/cost', '/faq', '/privacy'];
-const SECTION_IDS = ['diagnosis', 'compare', 'journey', 'school', 'care', 'people', 'cohort', 'partner', 'cost', 'faq', 'consult'];
-
-test('home renders hero plus all 11 numbered sections in order', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('h1')).toHaveText(/배운 영어를 써보는 곳/);
-  const ids = await page.locator('main > section[id]').evaluateAll((els) => els.map((e) => e.id));
-  expect(ids).toEqual(SECTION_IDS);
-  await expect(page.locator('#diagnosis [data-concern]')).toHaveCount(4);
-  await expect(page.locator('#faq details')).toHaveCount(8);
-  await expect(page.locator('#journey li')).toHaveCount(8);
-});
+const PAGES = ['/', '/program', '/school', '/care', '/about', '/guide', '/contact', '/privacy'];
+const NAV = [
+  ['/program', '프로그램'],
+  ['/school', '학교'],
+  ['/care', '현지 케어'],
+  ['/about', '브랜드 소개'],
+  ['/guide', '비용·FAQ'],
+] as const;
 
 test('every page has one h1, no duplicate ids, and images with alt that load', async ({ page, request }) => {
   for (const path of PAGES) {
@@ -31,25 +27,66 @@ test('every page has one h1, no duplicate ids, and images with alt that load', a
   }
 });
 
-test('J&C appears only in the partner section', async ({ page }) => {
+test('pages are noindex until launch', async ({ page }) => {
   await page.goto('/');
-  const outside = await page.evaluate(() => {
-    const partner = document.getElementById('partner');
-    return [...document.body.querySelectorAll('*')]
-      .filter((el) => !partner?.contains(el) && el.children.length === 0)
-      .some((el) => el.textContent?.includes('J&C'));
-  });
-  expect(outside).toBe(false);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
+});
+
+test('header nav links to every section page and marks the current one', async ({ page, isMobile }) => {
+  for (const [href, label] of NAV) {
+    await page.goto(href);
+    if (isMobile) await page.click('[data-menu-toggle]');
+    const link = page.getByRole('navigation', { name: '주 메뉴' }).getByRole('link', { name: label, exact: true });
+    await expect(link).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('h1')).toBeVisible();
+  }
+});
+
+test('home explore links are real document links', async ({ page }) => {
+  await page.goto('/');
+  const hrefs = await page.locator('#explore-title ~ ul a').evaluateAll((els) => els.map((a) => a.getAttribute('href')));
+  expect(hrefs).toEqual(['/program', '/school', '/care']);
+});
+
+test('J&C appears only in the about page partner card', async ({ page }) => {
+  for (const path of PAGES) {
+    await page.goto(path);
+    const outside = await page.evaluate(() => {
+      const partner = document.getElementById('partner');
+      return [...document.body.querySelectorAll('*')]
+        .filter((el) => !partner?.contains(el) && el.children.length === 0)
+        .some((el) => el.textContent?.includes('J&C'));
+    });
+    expect(outside, path).toBe(false);
+  }
+  await page.goto('/about');
+  await expect(page.locator('#partner img')).toHaveCSS('width', '160px');
 });
 
 test('price is always marked as planned', async ({ page }) => {
-  await page.goto('/cost');
+  await page.goto('/guide');
   await expect(page.locator('#cost .price')).toHaveText(/3,900만 원\s*\(예정\)/);
 });
 
+test('guide FAQ has 8 items that can be open at the same time', async ({ page }) => {
+  await page.goto('/guide');
+  const items = page.locator('#faq details');
+  await expect(items).toHaveCount(8);
+  await items.nth(0).locator('summary').click();
+  await items.nth(4).locator('summary').click();
+  await expect(items.nth(0)).toHaveAttribute('open', '');
+  await expect(items.nth(4)).toHaveAttribute('open', '');
+});
+
+test('journey has 8 steps grouped before / during / after school', async ({ page }) => {
+  await page.goto('/program');
+  await expect(page.locator('#journey li')).toHaveCount(8);
+  await expect(page.locator('#journey .phase-label')).toHaveText(['출국 전 · 준비', '현지 · 학교생활 최대 10주', '귀국 후']);
+});
+
 test.describe('concern diagnosis', () => {
-  test('is single-select, updates answer and CTA, and sends no request', async ({ page }) => {
-    await page.goto('/');
+  test('is single-select, updates answer and the tailored contact link, and sends no request', async ({ page }) => {
+    await page.goto('/program');
     const requests: string[] = [];
     page.on('request', (r) => requests.push(r.method()));
     const cards = page.locator('[data-concern]');
@@ -63,68 +100,61 @@ test.describe('concern diagnosis', () => {
     await expect(cards.nth(1)).toHaveAttribute('aria-pressed', 'false');
     await expect(cards.nth(3)).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('[data-answer-text]')).toContainText('특정 학교 합격이나 입시 성과를 약속하지 않으며');
-    await expect(page.locator('[data-fit-cta]')).toHaveText('참가 시기 상담하기');
+    await expect(page.locator('[data-fit-cta]')).toHaveAttribute('href', '/contact?concern=3');
     expect(requests.filter((m) => m !== 'GET')).toEqual([]);
   });
 
-  test('prefills the message but never overwrites user edits', async ({ page }) => {
-    await page.goto('/');
-    const message = page.locator('#consult-message');
-    await page.locator('[data-concern="0"]').click();
-    await expect(message).toHaveValue('학원은 다니는데, 말할 때는 멈춰요.');
-    await page.locator('[data-concern="2"]').click();
-    await expect(message).toHaveValue('캠프 이후, 무엇이 남았는지 모르겠어요.');
-
-    await message.fill('비용도 궁금합니다');
-    await page.locator('[data-concern="3"]').click();
-    await expect(message).toHaveValue('비용도 궁금합니다');
-  });
-
-  test('fit CTA moves to the consultation section below the sticky header', async ({ page }) => {
-    await page.goto('/');
+  test('carries the selected concern into the contact form', async ({ page }) => {
+    await page.goto('/program');
     await page.locator('[data-concern="0"]').click();
     await page.locator('[data-fit-cta]').click();
-    await expect(page).toHaveURL(/#consult$/);
-    const heading = page.locator('#consult-title');
-    await expect(heading).toBeInViewport();
-    const [headerBottom, headingTop] = await Promise.all([
-      page.locator('header.bar').evaluate((e) => e.getBoundingClientRect().bottom),
-      heading.evaluate((e) => e.getBoundingClientRect().top),
-    ]);
-    expect(headingTop).toBeGreaterThanOrEqual(headerBottom);
+    await expect(page).toHaveURL(/\/contact\?concern=0$/);
+    await expect(page.locator('#consult-message')).toHaveValue('학원은 다니는데, 말할 때는 멈춰요.');
+  });
+
+  test('contact ignores out-of-range or free-text concern params', async ({ page }) => {
+    for (const q of ['?concern=9', '?concern=%3Cb%3Ex%3C%2Fb%3E', '?concern=1abc']) {
+      await page.goto(`/contact${q}`);
+      await expect(page.locator('#consult-message')).toHaveValue('');
+    }
   });
 });
 
-test('FAQ items can be open at the same time', async ({ page }) => {
-  await page.goto('/faq');
-  const items = page.locator('#faq details');
-  await items.nth(0).locator('summary').click();
-  await items.nth(4).locator('summary').click();
-  await expect(items.nth(0)).toHaveAttribute('open', '');
-  await expect(items.nth(4)).toHaveAttribute('open', '');
+test.describe('mobile menu', () => {
+  test('toggles with aria-expanded and closes on Escape returning focus', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'mobile only');
+    await page.goto('/');
+    const toggle = page.locator('[data-menu-toggle]');
+    const nav = page.locator('#site-nav');
+    await expect(nav).toBeHidden();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(nav).toBeVisible();
+    await nav.getByRole('link', { name: '학교' }).focus();
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(nav).toBeHidden();
+    await expect(toggle).toBeFocused();
+  });
+
+  test('is replaced by inline nav on desktop', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'desktop only');
+    await page.goto('/');
+    await expect(page.locator('[data-menu-toggle]')).toBeHidden();
+    await expect(page.locator('#site-nav')).toBeVisible();
+  });
 });
 
-test('topic pages show only their FAQ subset', async ({ page }) => {
-  await page.goto('/cost');
-  await expect(page.locator('#faq details')).toHaveCount(3);
-  await page.goto('/care');
-  await expect(page.locator('#faq details')).toHaveCount(2);
+test('anchors are not hidden under the sticky header', async ({ page }) => {
+  await page.goto('/program#diagnosis');
+  const [headerBottom, headingTop] = await Promise.all([
+    page.locator('.site-header').evaluate((e) => e.getBoundingClientRect().bottom),
+    page.locator('#diagnosis-title').evaluate((e) => e.getBoundingClientRect().top),
+  ]);
+  expect(headingTop).toBeGreaterThanOrEqual(headerBottom);
 });
 
-test('header nav marks the current page', async ({ page }) => {
-  await page.goto('/program');
-  await expect(page.getByRole('navigation', { name: '주요 메뉴' }).getByRole('link', { name: '과정 안내' })).toHaveAttribute(
-    'aria-current',
-    'page',
-  );
-});
-
-test('pages without a consult section link to the home consult section', async ({ page }) => {
-  await page.goto('/privacy');
-  await expect(page.locator('header.bar .reserve')).toHaveAttribute('href', '/#consult');
-});
-
-for (const width of [320, 375, 390, 480, 768, 1024, 1440]) {
+for (const width of [320, 390, 760, 1024, 1440]) {
   test(`no horizontal overflow at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     for (const path of PAGES) {
@@ -134,38 +164,6 @@ for (const width of [320, 375, 390, 480, 768, 1024, 1440]) {
     }
   });
 }
-
-test.describe('mobile contact bar', () => {
-  test('is fixed on mobile, does not cover the footer, and hides over the consult form', async ({ page, isMobile }) => {
-    test.skip(!isMobile, 'mobile only');
-    // 상담 섹션이 없는 페이지에서는 끝까지 스크롤해도 바가 보이므로 푸터 겹침을 확인할 수 있다.
-    await page.goto('/privacy');
-    const bar = page.locator('[data-contact-bar]');
-    await expect(bar).toBeVisible();
-    await expect(bar).toHaveCSS('position', 'fixed');
-
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await expect(bar).toBeVisible();
-    const [barTop, footerBottom] = await Promise.all([
-      bar.evaluate((e) => e.getBoundingClientRect().top),
-      page.locator('footer').evaluate((e) => e.getBoundingClientRect().bottom),
-    ]);
-    expect(footerBottom).toBeLessThanOrEqual(barTop + 1);
-
-    await page.goto('/');
-    await expect(bar).toBeVisible();
-    await page.locator('#consult-name').scrollIntoViewIfNeeded();
-    await expect(bar).toBeHidden();
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await expect(bar).toBeVisible();
-  });
-
-  test('is hidden on desktop', async ({ page, isMobile }) => {
-    test.skip(isMobile, 'desktop only');
-    await page.goto('/');
-    await expect(page.locator('[data-contact-bar]')).toBeHidden();
-  });
-});
 
 test('smooth scroll is disabled under prefers-reduced-motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });

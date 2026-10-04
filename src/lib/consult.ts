@@ -100,3 +100,14 @@ export function nextConcernMessage(current: string, lastAutofill: string | null,
   const untouched = current.trim() === '' || current === lastAutofill;
   return untouched ? concernText : null;
 }
+
+/**
+ * 진단 → 상담 페이지 전달용 `?concern=n`. 0..count-1 정수만 받는다.
+ * 자유 텍스트 쿼리는 쓰지 않는다 (DEVELOPER-SPEC ConcernDiagnosis).
+ */
+export function parseConcernParam(search: string, count: number): number | null {
+  const raw = new URLSearchParams(search).get('concern');
+  if (raw === null || !/^\d$/.test(raw)) return null;
+  const n = Number(raw);
+  return n < count ? n : null;
+}
