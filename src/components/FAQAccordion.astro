@@ -1,23 +1,127 @@
 ---
-// FAQ 8개. native details/summary, 여러 개 동시에 열 수 있다.
+// FAQ. native details/summary — 여러 개 동시에 열 수 있다.
+// 전체 모드: 분류 필터 + 모두 펼치기/접기. 미리보기 모드(홈): 일부 질문 + 전체 보기 링크.
+import { faqCategories } from '../data/content';
 import { faqs } from '../data/site';
 import Section from './Section.astro';
+
+interface Props {
+  preview?: readonly number[];
+  tone?: 'white' | 'soft';
+}
+const { preview, tone = 'soft' } = Astro.props;
+const items = preview ? preview.map((i) => ({ faq: faqs[i], no: i + 1 })) : faqs.map((faq, i) => ({ faq, no: i + 1 }));
 ---
 
-<Section id="faq" tone="soft" eyebrow="QUESTIONS BEFORE YOU DECIDE" title={['신청 전,', '먼저 확인하세요.']}>
-  <div class="list">
-    {faqs.map((f, i) => (
-      <details>
-        <summary><span class="no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span class="q">{f.q}</span></summary>
-        <p>{f.a}</p>
-      </details>
-    ))}
+<Section id="faq" tone={tone} eyebrow="QUESTIONS BEFORE YOU DECIDE" title={['신청 전,', '먼저 확인하세요.']}>
+  <div data-faq>
+    {!preview && (
+      <div class="toolbar">
+        <div class="filters" role="group" aria-label="질문 분류">
+          <button type="button" class="chip" data-filter="all" aria-pressed="true">전체</button>
+          {faqCategories.map((c) => (
+            <button type="button" class="chip" data-filter={c.id} aria-pressed="false">{c.label}</button>
+          ))}
+        </div>
+        <button type="button" class="expand" data-expand>모두 펼치기</button>
+      </div>
+    )}
+    {!preview && <p class="sr-only" aria-live="polite" data-faq-count></p>}
+    <div class="list">
+      {items.map(({ faq, no }) => (
+        <details data-category={faq.category}>
+          <summary><span class="no" aria-hidden="true">{String(no).padStart(2, '0')}</span><span class="q">{faq.q}</span></summary>
+          <p>{faq.a}</p>
+        </details>
+      ))}
+    </div>
+    {preview && (
+      <a class="text-link more" href="/guide#faq">질문 8개 모두 보기 <span class="arrow" aria-hidden="true">→</span></a>
+    )}
   </div>
 </Section>
 
+<script>
+  const root = document.querySelector<HTMLElement>('[data-faq]');
+  const expand = root?.querySelector<HTMLButtonElement>('[data-expand]');
+  if (root && expand) {
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const items = [...root.querySelectorAll<HTMLDetailsElement>('details')];
+    const count = root.querySelector<HTMLElement>('[data-faq-count]')!;
+    const visible = () => items.filter((d) => !d.hidden);
+    const syncExpand = () => {
+      const allOpen = visible().every((d) => d.open);
+      expand.textContent = allOpen ? '모두 접기' : '모두 펼치기';
+    };
+
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        const filter = chip.dataset.filter;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        items.forEach((d) => (d.hidden = filter !== 'all' && d.dataset.category !== filter));
+        count.textContent = `질문 ${visible().length}개를 보여줍니다.`;
+        syncExpand();
+      }),
+    );
+    expand.addEventListener('click', () => {
+      const open = !visible().every((d) => d.open);
+      visible().forEach((d) => (d.open = open));
+      syncExpand();
+    });
+    items.forEach((d) => d.addEventListener('toggle', syncExpand));
+  }
+</script>
+
 <style>
-  .list {
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
     margin-top: 32px;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-navy);
+    font-size: var(--text-ui);
+    cursor: pointer;
+    transition:
+      background-color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+  .chip:hover {
+    border-color: var(--color-navy);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--color-navy);
+    border-color: var(--color-navy);
+    color: var(--color-on-dark);
+  }
+  .expand {
+    min-height: var(--touch-min);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-navy);
+    font-size: var(--text-ui);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    cursor: pointer;
+  }
+  .list {
+    margin-top: 24px;
     border-top: 2px solid var(--color-navy);
   }
   details {
@@ -63,15 +167,27 @@ import Section from './Section.astro';
     font-weight: 700;
     color: var(--color-sky-strong);
   }
-  p {
+  details p {
     padding: 0 0 22px 38px;
     color: var(--color-muted);
+  }
+  details[open] p {
+    animation: faq-in 240ms var(--ease);
+  }
+  @keyframes faq-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+  .more {
+    margin-top: 20px;
   }
   @media (max-width: 760px) {
     summary {
       gap: 12px;
     }
-    p {
+    details p {
       padding-left: 0;
     }
   }

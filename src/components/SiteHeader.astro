@@ -1,47 +1,53 @@
 ---
-// SiteHeader + MobileMenu. 760px 이하에서 토글 메뉴 — 모달이 아니며 포커스를 가두지 않는다.
+// SiteHeader. 넓은 화면은 가로 메뉴 + 전체 메뉴 버튼, 1000px 이하는 전체 메뉴 버튼만.
+// 스크롤하면 그림자를 진하게 해 본문과 구분한다.
 import { brand, nav } from '../data/site';
+import MenuDrawer from './MenuDrawer.astro';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="site-header">
+<header class="site-header" data-header>
   <div class="inner">
     <a class="wordmark" href="/">
       <strong>{brand.name}</strong>
       <span>{brand.parent}</span>
     </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
-      <span class="bars" aria-hidden="true"></span><span data-menu-label>메뉴</span>
-    </button>
-    <nav id="site-nav" aria-label="주 메뉴" data-menu>
+    <nav class="inline-nav" aria-label="주 메뉴">
       <ul>
         {nav.map((item) => (
           <li><a class="nav-link" href={item.href} aria-current={path === item.href ? 'page' : undefined}>{item.label}</a></li>
         ))}
       </ul>
-      <a class="btn nav-cta" href="/contact" aria-current={path === '/contact' ? 'page' : undefined}>상담 예약</a>
     </nav>
+    <div class="tools">
+      <a class="btn reserve" href="/contact" aria-current={path === '/contact' ? 'page' : undefined}>상담 예약</a>
+      <button class="menu-toggle" type="button" aria-haspopup="dialog" aria-controls="menu-drawer" aria-expanded="false" data-menu-open>
+        <span class="bars" aria-hidden="true"><span></span></span>
+        <span>메뉴</span>
+      </button>
+    </div>
   </div>
 </header>
+<MenuDrawer path={path} />
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-  const menu = document.querySelector<HTMLElement>('[data-menu]');
-  const label = document.querySelector<HTMLElement>('[data-menu-label]');
-
-  const setOpen = (open: boolean) => {
-    toggle?.setAttribute('aria-expanded', String(open));
-    menu?.toggleAttribute('data-open', open);
-    if (label) label.textContent = open ? '닫기' : '메뉴';
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  let ticking = false;
+  const update = () => {
+    header?.toggleAttribute('data-scrolled', window.scrollY > 8);
+    ticking = false;
   };
-
-  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape' || toggle?.getAttribute('aria-expanded') !== 'true') return;
-    setOpen(false);
-    toggle.focus();
-  });
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true },
+  );
+  update();
 </script>
 
 <style>
@@ -51,21 +57,27 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     z-index: 50;
     background: rgb(255 255 255 / 0.96);
     backdrop-filter: saturate(1.4) blur(10px);
-    box-shadow: var(--shadow-header);
+    box-shadow: 0 1px 0 var(--color-line);
+    transition: box-shadow var(--duration) var(--ease);
+  }
+  .site-header[data-scrolled] {
+    box-shadow:
+      0 1px 0 var(--color-line),
+      0 10px 30px #0c234014;
   }
   .inner {
     max-width: var(--header-max);
-    min-height: var(--header-h);
+    height: var(--header-h);
     margin-inline: auto;
     padding: 0 var(--gutter);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 30px;
   }
   .wordmark {
     display: grid;
     flex-shrink: 0;
+    margin-right: auto;
     line-height: 1.45;
   }
   .wordmark strong {
@@ -77,19 +89,14 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     font-size: var(--text-meta);
     color: var(--color-muted);
   }
-  nav {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    font-size: var(--text-ui);
-    white-space: nowrap;
-  }
   ul {
     display: flex;
     gap: 26px;
     margin: 0;
     padding: 0;
     list-style: none;
+    font-size: var(--text-ui);
+    white-space: nowrap;
   }
   .nav-link {
     position: relative;
@@ -116,108 +123,68 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   .nav-link[aria-current='page'] {
     font-weight: 700;
   }
-  .nav-cta {
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .reserve {
     min-height: var(--touch-min);
     padding: 10px 20px;
   }
   .menu-toggle {
-    display: none;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
     min-height: var(--touch-min);
-    padding: 0 16px;
+    padding: 0 14px;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-ui);
     background: var(--color-surface);
     color: var(--color-navy);
     font-size: var(--text-ui);
     cursor: pointer;
+    transition: border-color var(--duration) var(--ease);
   }
-  .bars,
-  .bars::before,
-  .bars::after {
-    display: block;
+  .menu-toggle:hover {
+    border-color: var(--color-navy);
+  }
+  .bars {
+    display: grid;
+    gap: 4px;
     width: 16px;
+  }
+  .bars::before,
+  .bars::after,
+  .bars span {
+    content: '';
+    display: block;
     height: 1.5px;
     background: currentColor;
     transition: transform var(--duration) var(--ease);
   }
-  .bars {
-    position: relative;
+  .bars span {
+    width: 70%;
+    margin-left: auto;
   }
-  .bars::before,
-  .bars::after {
-    content: '';
-    position: absolute;
-    left: 0;
-  }
-  .bars::before {
-    top: -5px;
-  }
-  .bars::after {
-    top: 5px;
-  }
-  .menu-toggle[aria-expanded='true'] .bars {
-    background: transparent;
-  }
-  .menu-toggle[aria-expanded='true'] .bars::before {
-    transform: translateY(5px) rotate(45deg);
-  }
-  .menu-toggle[aria-expanded='true'] .bars::after {
-    transform: translateY(-5px) rotate(-45deg);
+  .menu-toggle:hover .bars span {
+    transform: scaleX(1.43);
+    transform-origin: right;
   }
   @media (max-width: 1000px) {
-    .inner {
-      gap: 20px;
+    .inline-nav {
+      display: none;
     }
     .wordmark strong {
       font-size: 1.25rem;
     }
-    nav,
-    ul {
+    .inner {
       gap: 16px;
     }
   }
-  @media (max-width: 760px) {
-    .inner {
-      flex-wrap: wrap;
-      gap: 0;
-    }
-    .menu-toggle {
-      display: inline-flex;
-    }
-    nav {
+  @media (max-width: 480px) {
+    .reserve {
       display: none;
-      width: 100%;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-      padding: 8px 0 20px;
-      border-top: 1px solid var(--color-line);
-      white-space: normal;
-    }
-    nav[data-open] {
-      display: flex;
-    }
-    ul {
-      flex-direction: column;
-      gap: 0;
-    }
-    .nav-link {
-      display: flex;
-      min-height: 52px;
-      padding: 0 8px;
-      border-bottom: 1px solid var(--color-line);
-      font-size: 1rem;
-    }
-    .nav-link::after {
-      display: none;
-    }
-    .nav-link[aria-current='page'] {
-      background: var(--color-soft);
-    }
-    .nav-cta {
-      min-height: 52px;
     }
   }
 </style>

@@ -48,6 +48,7 @@
   --section-y: 96px;
   --touch-min: 44px;
   --header-h: 84px; /* sticky 헤더 높이. 앵커 scroll-padding에 사용 */
+  --page-nav-h: 52px; /* 섹션 바로가기 바 높이 */
 
   /* 라운드·그림자: 절제된 톤 */
   --radius-ui: 4px;

@@ -1,0 +1,269 @@
+---
+// 전체 메뉴 사이드바. native <dialog> 모달 — 포커스 가두기·Esc·배경 비활성은 브라우저가 처리한다.
+// 닫히면 여는 버튼으로 포커스를 돌려준다.
+import { menuDescriptions } from '../data/content';
+import { brand, contact, nav } from '../data/site';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+---
+
+<dialog id="menu-drawer" class="drawer" aria-label="전체 메뉴" data-menu-drawer>
+  <div class="head">
+    <p class="wordmark">{brand.name}<span>{brand.parent}</span></p>
+    <button class="close" type="button" data-menu-close>
+      <span class="x" aria-hidden="true"></span>닫기
+    </button>
+  </div>
+
+  <nav aria-label="전체 메뉴 목록">
+    <ol>
+      <li>
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>
+          <span class="no" aria-hidden="true">00</span>
+          <span class="label">홈</span>
+          <span class="desc">HARRIS PREP 한눈에 보기</span>
+        </a>
+      </li>
+      {nav.map((item, i) => (
+        <li>
+          <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+            <span class="no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="label">{item.label}</span>
+            <span class="desc">{menuDescriptions[item.href]}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+
+  <div class="foot">
+    <a class="btn" href="/contact">상담 예약 <span class="arrow" aria-hidden="true">→</span></a>
+    <dl>
+      <div><dt>전화</dt><dd><a href={contact.phoneHref}>{contact.phoneDisplay}</a></dd></div>
+      <div><dt>이메일</dt><dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd></div>
+    </dl>
+  </div>
+</dialog>
+
+<script>
+  const drawer = document.querySelector<HTMLDialogElement>('[data-menu-drawer]');
+  const opener = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (drawer && opener) {
+    const finishClose = () => {
+      drawer.close();
+      opener.setAttribute('aria-expanded', 'false');
+      opener.focus();
+    };
+
+    let openFrame = 0;
+    const open = () => {
+      drawer.showModal();
+      opener.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      openFrame = requestAnimationFrame(() => drawer.setAttribute('data-open', ''));
+    };
+
+    const CLOSE_FALLBACK_MS = 400; // 전환 시간(280ms)보다 길게
+    const close = () => {
+      if (!drawer.open) return;
+      cancelAnimationFrame(openFrame);
+      document.documentElement.style.overflow = '';
+      const wasSlidIn = drawer.hasAttribute('data-open');
+      drawer.removeAttribute('data-open');
+      // 열림 애니메이션 전(연 직후 바로 Esc)이거나 reduced-motion이면 즉시 닫는다.
+      if (!wasSlidIn || reduceMotion.matches) return finishClose();
+      const timer = window.setTimeout(done, CLOSE_FALLBACK_MS);
+      function done() {
+        window.clearTimeout(timer);
+        drawer!.removeEventListener('transitionend', onEnd);
+        finishClose();
+      }
+      function onEnd(event: TransitionEvent) {
+        if (event.target === drawer && event.propertyName === 'transform') done();
+      }
+      drawer.addEventListener('transitionend', onEnd);
+    };
+
+    opener.addEventListener('click', open);
+    drawer.querySelector('[data-menu-close]')?.addEventListener('click', close);
+    // Esc: 기본 즉시 닫힘 대신 닫힘 애니메이션을 거친다.
+    drawer.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      close();
+    });
+    // 패널 바깥(배경) 클릭으로 닫기
+    drawer.addEventListener('click', (event) => {
+      const r = drawer.getBoundingClientRect();
+      const inside = event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
+      if (!inside) close();
+    });
+  }
+</script>
+
+<style>
+  .drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(440px, 100%);
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0 32px 32px;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: var(--color-surface);
+    color: var(--color-navy);
+    transform: translateX(100%);
+    transition: transform 280ms var(--ease);
+  }
+  .drawer:not([open]) {
+    display: none;
+  }
+  .drawer[data-open] {
+    transform: none;
+  }
+  .drawer::backdrop {
+    background: #0c2340;
+    opacity: 0;
+    transition: opacity 280ms var(--ease);
+  }
+  .drawer[data-open]::backdrop {
+    opacity: 0.55;
+  }
+  .head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-h);
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .wordmark {
+    display: grid;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.075em;
+    line-height: 1.45;
+  }
+  .wordmark span {
+    font-size: var(--text-meta);
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--color-muted);
+  }
+  .close {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: var(--touch-min);
+    padding: 0 14px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-ui);
+    background: var(--color-surface);
+    color: var(--color-navy);
+    font-size: var(--text-ui);
+    cursor: pointer;
+  }
+  .close:hover {
+    border-color: var(--color-navy);
+  }
+  .x {
+    position: relative;
+    width: 14px;
+    height: 14px;
+  }
+  .x::before,
+  .x::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transform: rotate(45deg);
+  }
+  .x::after {
+    transform: rotate(-45deg);
+  }
+  ol {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  li a {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 2px 8px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .no {
+    grid-row: span 2;
+    font-size: var(--text-meta);
+    font-weight: 700;
+    color: var(--color-sky-strong);
+    line-height: 2.4;
+  }
+  .label {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+  .desc {
+    font-size: var(--text-ui);
+    color: var(--color-muted);
+  }
+  li a:hover .label,
+  li a[aria-current='page'] .label {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  li a[aria-current='page'] {
+    background: linear-gradient(90deg, var(--color-soft), transparent);
+  }
+  .foot {
+    margin-top: auto;
+    padding-top: 28px;
+  }
+  .foot .btn {
+    width: 100%;
+  }
+  dl {
+    margin-top: 20px;
+    font-size: var(--text-ui);
+  }
+  dl div {
+    display: flex;
+    gap: 16px;
+    padding: 4px 0;
+  }
+  dt {
+    min-width: 48px;
+    color: var(--color-muted);
+  }
+  dd a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-min);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  @media (max-width: 760px) {
+    .drawer {
+      padding: 0 var(--gutter) 28px;
+    }
+  }
+</style>

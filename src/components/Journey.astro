@@ -4,6 +4,11 @@ import { journey } from '../data/site';
 import Pending from './Pending.astro';
 import Section from './Section.astro';
 
+interface Props {
+  tone?: 'white' | 'soft';
+}
+const { tone = 'soft' } = Astro.props;
+
 const phases = [
   { label: '출국 전 · 준비', steps: journey.slice(0, 3), offset: 0 },
   { label: '현지 · 학교생활 최대 10주', steps: journey.slice(3, 6), offset: 3 },
@@ -13,7 +18,7 @@ const phases = [
 
 <Section
   id="journey"
-  tone="soft"
+  tone={tone}
   eyebrow="BEFORE, DURING & AFTER"
   title={['출국 전부터 귀국 후까지.', '과정의 흐름을 먼저 봅니다.']}
   copy={['학교생활은 최대 10주. 준비와 귀국 후 단계는 별도 일정입니다.']}

@@ -11,6 +11,10 @@ html {
   scroll-padding-top: calc(var(--header-h) + 16px);
 }
 
+html:has(.page-nav) {
+  scroll-padding-top: calc(var(--header-h) + var(--page-nav-h) + 16px);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -318,4 +322,49 @@ a:hover .text-link .arrow,
   *::after {
     transition: none !important;
   }
+}
+
+/* 스크롤 등장 — JS가 html.reveal-on을 붙일 때만 숨긴다 (JS 실패·reduced-motion이면 항상 보임) */
+.reveal-on [data-reveal] {
+  transition:
+    opacity 600ms var(--ease),
+    transform 600ms var(--ease);
+}
+
+.reveal-on [data-reveal]:not(.is-in) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
+}
+
+/* 체크리스트 — 확인할 질문·준비 항목 */
+.checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--color-navy);
+}
+
+.checklist li {
+  position: relative;
+  padding: 16px 0 16px 34px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 21px;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-sky-strong);
+  border-radius: 3px;
 }

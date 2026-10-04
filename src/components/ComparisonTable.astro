@@ -2,9 +2,14 @@
 // ComparisonTable: 의미론적 table. 좁은 화면에서는 이 컴포넌트만 가로 스크롤.
 import { comparison } from '../data/site';
 import Section from './Section.astro';
+
+interface Props {
+  tone?: 'white' | 'soft';
+}
+const { tone = 'white' } = Astro.props;
 ---
 
-<Section id="compare" eyebrow="THE DIFFERENCE" title={['활동 일정이 아닌,', '학교 시간표를 따릅니다.']}>
+<Section id="compare" tone={tone} eyebrow="THE DIFFERENCE" title={['활동 일정이 아닌,', '학교 시간표를 따릅니다.']}>
   <div class="scroll" role="region" aria-labelledby="compare-caption" tabindex="0">
     <table>
       <caption id="compare-caption" class="sr-only">일반 영어캠프·단기 어학연수·HARRIS PREP 비교</caption>
@@ -76,6 +81,18 @@ import Section from './Section.astro';
   @media (max-width: 760px) {
     .hint {
       display: block;
+    }
+    /* 가로 스크롤 중에도 비교 기준 열을 고정 */
+    tbody th,
+    thead th:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--color-surface);
+      box-shadow: 1px 0 0 var(--color-line);
+    }
+    thead th:first-child {
+      background: var(--color-soft);
     }
   }
 </style>

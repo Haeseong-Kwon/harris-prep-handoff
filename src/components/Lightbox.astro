@@ -1,0 +1,121 @@
+---
+// 사진 크게 보기. 페이지의 [data-lightbox] 버튼(안에 img)을 묶어 ← → 로 넘긴다.
+// native <dialog> — Esc·포커스 복귀는 브라우저가 처리.
+---
+
+<dialog class="lightbox" aria-label="사진 크게 보기" data-lightbox-dialog>
+  <figure data-lightbox-figure>
+    <figcaption data-lightbox-caption></figcaption>
+  </figure>
+  <div class="controls">
+    <button type="button" data-lightbox-prev><span aria-hidden="true">←</span><span class="sr-only">이전 사진</span></button>
+    <span class="count" data-lightbox-count></span>
+    <button type="button" data-lightbox-next><span aria-hidden="true">→</span><span class="sr-only">다음 사진</span></button>
+    <button type="button" class="close" data-lightbox-close>닫기</button>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+  const triggers = [...document.querySelectorAll<HTMLButtonElement>('[data-lightbox]')];
+  if (dialog && triggers.length) {
+    const figure = dialog.querySelector<HTMLElement>('[data-lightbox-figure]')!;
+    let img: HTMLImageElement | null = null;
+    const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    const count = dialog.querySelector<HTMLElement>('[data-lightbox-count]')!;
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + triggers.length) % triggers.length;
+      const source = triggers[index].querySelector('img')!;
+      // 확대 이미지는 처음 열 때 만든다 (src·alt 없는 img를 미리 두지 않음).
+      if (!img) {
+        img = document.createElement('img');
+        figure.prepend(img);
+      }
+      img.src = source.currentSrc || source.src;
+      img.alt = source.alt;
+      caption.textContent = triggers[index].dataset.lightbox ?? '';
+      count.textContent = `${index + 1} / ${triggers.length}`;
+    };
+
+    triggers.forEach((trigger, i) =>
+      trigger.addEventListener('click', () => {
+        show(i);
+        dialog.showModal();
+      }),
+    );
+    dialog.querySelector('[data-lightbox-prev]')!.addEventListener('click', () => show(index - 1));
+    dialog.querySelector('[data-lightbox-next]')!.addEventListener('click', () => show(index + 1));
+    dialog.querySelector('[data-lightbox-close]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .lightbox {
+    width: min(1100px, calc(100% - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-on-dark);
+    overflow: visible;
+  }
+  .lightbox::backdrop {
+    background: rgb(7 24 43 / 0.9);
+  }
+  .lightbox[open] {
+    animation: lightbox-in 220ms var(--ease);
+  }
+  @keyframes lightbox-in {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+  .lightbox :global(img) {
+    width: 100%;
+    max-height: calc(100dvh - 160px);
+    object-fit: contain;
+  }
+  figcaption {
+    padding: 12px 0 0;
+    font-size: var(--text-ui);
+    color: var(--color-on-dark-muted);
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  button {
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    border: 1px solid #3a5068;
+    border-radius: var(--radius-ui);
+    background: transparent;
+    color: var(--color-on-dark);
+    font-size: var(--text-ui);
+    cursor: pointer;
+  }
+  button:hover {
+    border-color: var(--color-sky);
+  }
+  .count {
+    min-width: 56px;
+    text-align: center;
+    font-size: var(--text-ui);
+  }
+  .close {
+    margin-left: auto;
+    padding: 0 16px;
+  }
+</style>

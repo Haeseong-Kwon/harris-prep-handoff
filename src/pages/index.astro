@@ -1,16 +1,36 @@
 ---
 import BrandTeaser from '../components/BrandTeaser.astro';
 import ExploreLinks from '../components/ExploreLinks.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
 import HomeHero from '../components/HomeHero.astro';
 import PageCta from '../components/PageCta.astro';
+import PointsGrid from '../components/PointsGrid.astro';
 import SchoolTeaser from '../components/SchoolTeaser.astro';
+import Section from '../components/Section.astro';
+import StepFlow from '../components/StepFlow.astro';
+import { homeFaqIndexes, howItWorks, whySchoolLife } from '../data/content';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="홈">
   <HomeHero />
   <ExploreLinks />
+  <Section id="why" tone="soft" eyebrow="WHY SCHOOL LIFE" title={['체험 일정이 아닌,', '현지 학생의 시간표로.']}>
+    <PointsGrid items={whySchoolLife} />
+    <a class="text-link" href="/program#compare">캠프·어학연수와 비교해 보기 <span class="arrow" aria-hidden="true">→</span></a>
+  </Section>
+  <Section id="how" eyebrow="HOW IT WORKS" title={['상담부터 학교생활까지,', '한 단계씩 확인합니다.']} copy={['준비와 귀국 후 단계는 학교생활 최대 10주와 별도 일정입니다.']}>
+    <StepFlow steps={howItWorks} />
+    <a class="text-link" href="/program#journey">전체 8단계 여정 보기 <span class="arrow" aria-hidden="true">→</span></a>
+  </Section>
   <SchoolTeaser />
   <BrandTeaser />
+  <FAQAccordion preview={homeFaqIndexes} tone="white" />
   <PageCta />
 </Base>
+
+<style>
+  .text-link {
+    margin-top: 20px;
+  }
+</style>

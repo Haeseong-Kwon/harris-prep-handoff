@@ -1,0 +1,79 @@
+---
+// 번호 + 제목 + 설명 요점 목록. 구분선 중심 (카드 반복 지양).
+import type { Point } from '../data/content';
+
+interface Props {
+  items: Point[];
+  columns?: 2 | 3 | 4;
+  dark?: boolean;
+}
+const { items, columns = 3, dark = false } = Astro.props;
+---
+
+<ol class:list={['points', `cols-${columns}`, { dark }]}>
+  {items.map((item, i) => (
+    <li>
+      <span class="no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <h3>{item.title}</h3>
+      <p>{item.body}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .points {
+    display: grid;
+    gap: 0 36px;
+    margin: 36px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  li {
+    padding: 24px 0 28px;
+    border-top: 2px solid var(--color-navy);
+  }
+  .dark li {
+    border-top-color: var(--color-sky);
+  }
+  .no {
+    display: block;
+    margin-bottom: 14px;
+    font-size: var(--text-meta);
+    font-weight: 700;
+    color: var(--color-sky-strong);
+  }
+  .dark .no {
+    color: var(--color-sky);
+  }
+  p {
+    margin-top: 10px;
+    color: var(--color-muted);
+  }
+  .dark p {
+    color: var(--color-on-dark-muted);
+  }
+  @media (max-width: 1000px) {
+    .cols-3,
+    .cols-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 760px) {
+    .points {
+      grid-template-columns: 1fr;
+      margin-top: 24px;
+    }
+    li {
+      padding: 20px 0 22px;
+    }
+  }
+</style>

@@ -1,10 +1,43 @@
 ---
 import ConsultationForm from '../components/ConsultationForm.astro';
 import PageTitle from '../components/PageTitle.astro';
+import Section from '../components/Section.astro';
+import StepFlow from '../components/StepFlow.astro';
+import { consultFlow, consultPrep } from '../data/content';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="상담">
   <PageTitle eyebrow="CONTACT" title="아이 이야기부터 시작하세요." lead="희망 시기와 참가 조건, 돌봄 범위와 비용을 함께 확인합니다." />
+  <Section id="consult-guide" eyebrow="HOW IT WORKS" title={['상담은', '이렇게 진행됩니다.']}>
+    <div class="guide">
+      <StepFlow steps={consultFlow} />
+      <div>
+        <h3>상담 전에 정리해 두면 좋아요</h3>
+        <ul class="checklist">
+          {consultPrep.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </Section>
   <ConsultationForm />
 </Base>
+
+<style>
+  .guide {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .guide h3 {
+    margin: 40px 0 16px;
+    font-size: 1.1rem;
+  }
+  @media (max-width: 1000px) {
+    .guide {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+</style>

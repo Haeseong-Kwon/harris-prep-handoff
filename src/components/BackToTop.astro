@@ -1,0 +1,53 @@
+---
+// 맨 위로. 일정 거리 이상 스크롤하면 나타난다.
+---
+
+<button class="to-top" type="button" data-to-top hidden>
+  <span aria-hidden="true">↑</span><span class="sr-only">맨 위로</span>
+</button>
+
+<script>
+  const SHOW_AFTER_PX = 700;
+  const button = document.querySelector<HTMLButtonElement>('[data-to-top]');
+  if (button) {
+    const sync = () => (button.hidden = window.scrollY < SHOW_AFTER_PX);
+    window.addEventListener('scroll', sync, { passive: true });
+    sync();
+    button.addEventListener('click', () => {
+      const smooth = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+      window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+      document.querySelector<HTMLElement>('.wordmark')?.focus({ preventScroll: true });
+    });
+  }
+</script>
+
+<style>
+  .to-top {
+    position: fixed;
+    right: 24px;
+    bottom: calc(24px + env(safe-area-inset-bottom));
+    z-index: 40;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--color-navy);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-navy);
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 24px #0c234024;
+    transition:
+      background-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+  .to-top:hover {
+    background: var(--color-navy);
+    color: var(--color-on-dark);
+  }
+  @media (max-width: 760px) {
+    .to-top {
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+  }
+</style>

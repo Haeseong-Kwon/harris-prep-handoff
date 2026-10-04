@@ -1,0 +1,101 @@
+---
+// 페이지 안 섹션 바로가기. 헤더 아래 고정되며, 지금 보고 있는 섹션을 표시한다(scrollspy).
+interface Props {
+  items: { id: string; label: string }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="page-nav" aria-label="이 페이지 목차" data-page-nav>
+  <div class="container">
+    <ul>
+      {items.map((item) => (
+        <li><a href={`#${item.id}`} data-target={item.id}>{item.label}</a></li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-page-nav]');
+  if (nav && 'IntersectionObserver' in window) {
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('[data-target]')];
+    const list = nav.querySelector('ul')!;
+    const setActive = (id: string) => {
+      links.forEach((link) => {
+        const active = link.dataset.target === id;
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+        // 좁은 화면의 가로 스크롤 목록에서 활성 항목이 보이게 한다 (세로 스크롤은 건드리지 않음)
+        if (active) list.scrollTo({ left: link.offsetLeft - 24, behavior: 'auto' });
+      });
+    };
+    const observer = new IntersectionObserver(
+      (entries) => entries.filter((e) => e.isIntersecting).forEach((e) => setActive(e.target.id)),
+      { rootMargin: '-35% 0px -60% 0px' },
+    );
+    links.forEach((link) => {
+      const section = document.getElementById(link.dataset.target!);
+      if (section) observer.observe(section);
+    });
+  }
+</script>
+
+<style>
+  .page-nav {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 30;
+    background: rgb(255 255 255 / 0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-line);
+  }
+  ul {
+    display: flex;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  ul::-webkit-scrollbar {
+    display: none;
+  }
+  a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: var(--page-nav-h);
+    font-size: var(--text-ui);
+    color: var(--color-muted);
+    white-space: nowrap;
+    transition: color var(--duration) var(--ease);
+  }
+  a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--color-navy);
+    transform: scaleX(0);
+    transition: transform var(--duration) var(--ease);
+  }
+  a:hover,
+  a[aria-current] {
+    color: var(--color-navy);
+  }
+  a[aria-current] {
+    font-weight: 700;
+  }
+  a[aria-current]::after {
+    transform: scaleX(1);
+  }
+  @media (max-width: 760px) {
+    ul {
+      gap: 22px;
+    }
+  }
+</style>

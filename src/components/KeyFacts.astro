@@ -1,0 +1,47 @@
+---
+// 한눈에 보기: 확정 사실만 나열한 정의 목록.
+interface Props {
+  facts: [string, string][];
+}
+const { facts } = Astro.props;
+---
+
+<dl class="facts">
+  {facts.map(([label, value]) => (
+    <div><dt>{label}</dt><dd>{value}</dd></div>
+  ))}
+</dl>
+
+<style>
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 48px;
+    margin-top: 36px;
+    border-top: 2px solid var(--color-navy);
+  }
+  div {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  dt {
+    font-size: var(--text-ui);
+    font-weight: 700;
+    color: var(--color-sky-strong);
+    line-height: 1.75rem;
+  }
+  dd {
+    font-weight: 600;
+  }
+  @media (max-width: 760px) {
+    .facts {
+      grid-template-columns: 1fr;
+    }
+    div {
+      grid-template-columns: 64px 1fr;
+    }
+  }
+</style>

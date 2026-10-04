@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { PUBLIC_CONSULT_ENDPOINT as CONSULT_ENDPOINT } from 'astro:env/client';
+import BackToTop from '../components/BackToTop.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 
@@ -40,6 +41,24 @@ const fullTitle = `${title} | HARRIS PREP`;
       <slot />
     </main>
     <SiteFooter />
+    <BackToTop />
+    <script>
+      // 스크롤 등장: 지원 브라우저 + 움직임 허용일 때만 켠다.
+      if ('IntersectionObserver' in window && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        const targets = document.querySelectorAll('[data-reveal]');
+        const observer = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-in');
+              observer.unobserve(entry.target);
+            }),
+          { rootMargin: '0px 0px -10% 0px' },
+        );
+        targets.forEach((el) => observer.observe(el));
+        document.documentElement.classList.add('reveal-on');
+      }
+    </script>
   </body>
 </html>
 
